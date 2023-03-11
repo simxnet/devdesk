@@ -7,7 +7,7 @@
 require("./src/env.mjs");
 
 /** @type {import("next").NextConfig} */
-const config = {
+module.exports = {
   reactStrictMode: true,
 
   /**
@@ -21,4 +21,3 @@ const config = {
     defaultLocale: "en",
   },
 };
-export default config;
