@@ -18,6 +18,7 @@ import {
 import { type Session as ISession } from "next-auth";
 import { signOut } from "next-auth/react";
 import { useTheme } from "next-themes";
+import Link from "next/link";
 
 export interface SessionProps {
   data: ISession;
@@ -44,10 +45,12 @@ export default function Session({ data }: SessionProps): JSX.Element {
           <DropdownMenuLabel>My Account</DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuGroup>
-            <DropdownMenuItem>
-              <UserIcon className="mr-2 h-4 w-4" />
-              <span>Profile</span>
-            </DropdownMenuItem>
+            <Link href={`/u/${data.user.id}`}>
+              <DropdownMenuItem>
+                <UserIcon className="mr-2 h-4 w-4" />
+                <span>Profile</span>
+              </DropdownMenuItem>
+            </Link>
             <DropdownMenuItem onSelect={(e: Event) => e.preventDefault()}>
               <SunIcon className="mr-2 h-4 w-4" />
               <span>Light theme</span>
