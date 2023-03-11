@@ -1,4 +1,4 @@
-import { DetailedHTMLProps, HTMLAttributes, ReactNode } from "react";
+import { type DetailedHTMLProps, type HTMLAttributes, type ReactNode } from "react";
 
 export interface TypographyProps
   extends DetailedHTMLProps<

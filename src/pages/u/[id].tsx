@@ -10,6 +10,7 @@ import TypographyH3 from "@/components/ui/typography/h3";
 import TypographyP from "@/components/ui/typography/p";
 import { api } from "@/utils/api";
 import { EllipsisHorizontalIcon, PencilIcon } from "@heroicons/react/24/solid";
+import Image from "next/image";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 
@@ -19,9 +20,9 @@ export default function User() {
 
   useEffect(() => {
     if (user.isError || user.error) {
-      router.push("/");
+      router.push("/").then(() => console.info("redirected /"));
     }
-  }, [user]);
+  }, [user, router]);
 
   return (
     <Layout>
@@ -33,7 +34,8 @@ export default function User() {
               {user.isLoading ? (
                 <div className="-mt-20 h-24 w-24 animate-pulse rounded-full bg-slate-200 dark:bg-slate-800" />
               ) : (
-                <img
+                <Image
+                  alt="user avatar"
                   src={(user.data && user.data.image) ?? ""}
                   className="-mt-20 h-24 w-24 rounded-full bg-slate-200 ring-8 ring-slate-200 dark:bg-slate-800 dark:ring-slate-800"
                 />

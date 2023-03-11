@@ -17,6 +17,16 @@ const config = {
   },
   plugins: ["@typescript-eslint"],
   extends: ["next/core-web-vitals", "plugin:@typescript-eslint/recommended"],
+  ignorePatterns: [
+    "react-hooks/exhaustive-deps",
+    "@typescript-eslint/no-floating-promises",
+    "@typescript-eslint/restrict-template-expressions",
+    "@typescript-eslint/no-unused-vars",
+    "@typescript-eslint/no-non-null-assertion",
+    "@typescript-eslint/no-empty-interface",
+    "@typescript-eslint/no-misused-promises",
+    "jsx-a11y/alt-text",
+  ],
   rules: {
     "@typescript-eslint/consistent-type-imports": [
       "warn",

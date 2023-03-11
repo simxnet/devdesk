@@ -15,7 +15,7 @@ import {
   SunIcon,
   UserIcon,
 } from "@heroicons/react/24/outline";
-import { Session as ISession } from "next-auth";
+import { type Session as ISession } from "next-auth";
 import { signOut } from "next-auth/react";
 import { useTheme } from "next-themes";
 

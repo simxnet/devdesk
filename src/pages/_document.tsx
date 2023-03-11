@@ -1,5 +1,5 @@
 import Document, {
-  DocumentContext,
+  type DocumentContext,
   Html,
   Head,
   Main,

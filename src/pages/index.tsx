@@ -45,7 +45,7 @@ export default function Home() {
     if (submit.isError) {
       toast({
         title: "Something happened!",
-        description: beautifyErrors(submit.error?.message!),
+        description: beautifyErrors(submit.error?.message),
         variant: "destructive",
       });
     }

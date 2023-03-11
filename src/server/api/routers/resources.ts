@@ -50,8 +50,4 @@ export const resourcesRouter = createTRPCRouter({
         success: true,
       };
     }),
-
-  getSecretTest: protectedProcedure.query(({ ctx }) => {
-    return `authorized user ${ctx.session.user.name}`;
-  }),
 });

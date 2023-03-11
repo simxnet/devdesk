@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { TypographyProps } from "./types";
+import { type TypographyProps } from "./types";
 
 export default function TypographyH1({ children, ...rest }: TypographyProps) {
   return (

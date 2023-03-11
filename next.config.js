@@ -12,4 +12,8 @@ module.exports = {
     locales: ["en"],
     defaultLocale: "en",
   },
+
+  images: {
+    domains: ["avatars.githubusercontent.com", "cdn.discordapp.com"],
+  },
 };

@@ -6,9 +6,7 @@ import { signIn, useSession } from "next-auth/react";
 import { useEffect } from "react";
 import { useRouter } from "next/router";
 
-export interface AuthProps {}
-
-export default function AuthForm({}: AuthProps): JSX.Element {
+export default function AuthForm(): JSX.Element {
   const { status } = useSession();
   const router = useRouter();
 
