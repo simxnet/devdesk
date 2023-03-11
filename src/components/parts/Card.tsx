@@ -12,6 +12,7 @@ import {
   EllipsisHorizontalIcon,
 } from "@heroicons/react/24/solid";
 import { cutText } from "@/lib/utils";
+import { EllipsisVerticalIcon } from "@heroicons/react/24/outline";
 
 export interface CardProps {
   name: string;
@@ -39,9 +40,8 @@ export default function Card({
               <TypographyH3>{cutText(name, 15)}</TypographyH3>
               <Popover>
                 <PopoverTrigger asChild>
-                  <Button variant="outline" size={"sm"}>
-                    <EllipsisHorizontalIcon className="h-4 w-4" />
-                    <span className="sr-only">Open popover</span>
+                  <Button variant="ghost" size={"sm"} className="rounded-full">
+                    <EllipsisVerticalIcon className="h-5 w-5" />
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent className="w-64">

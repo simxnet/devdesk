@@ -46,11 +46,21 @@ model User {
     email         String?    @unique
     emailVerified DateTime?
     image         String?
+    badges        Badge[]
     accounts      Account[]
     sessions      Session[]
     resources     Resource[]
 
     @@map("users")
+}
+
+model Badge {
+    id     String  @id @default(cuid())
+    name   String
+    user   User?   @relation(fields: [userId], references: [id])
+    userId String?
+
+    @@map("badges")
 }
 
 model Resource {

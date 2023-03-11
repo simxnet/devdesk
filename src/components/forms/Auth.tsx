@@ -1,14 +1,18 @@
-import { Button } from "../ui/button";
-import { DiscordLogoIcon, GitHubLogoIcon } from "@radix-ui/react-icons";
-import TypographyH2 from "../ui/typography/h2";
-import TypographyP from "../ui/typography/p";
 import { signIn, useSession } from "next-auth/react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
+import { Label } from "../ui/label";
+import { Checkbox } from "../ui/checkbox";
+import { Button } from "../ui/button";
+import TypographyP from "../ui/typography/p";
+import TypographyH2 from "../ui/typography/h2";
+import Logo from "../Logo";
+import { cn } from "@/lib/utils";
 
 export default function AuthForm(): JSX.Element {
   const { status } = useSession();
   const router = useRouter();
+  const [provider, setProvider] = useState<"discord" | "github" | null>(null);
 
   useEffect(() => {
     if (status === "authenticated") {
@@ -16,28 +20,56 @@ export default function AuthForm(): JSX.Element {
     }
   }, [status]);
   return (
-    <div className="grid h-screen place-items-center">
-      <div className="flex flex-col items-center gap-5">
-        <div className="flex flex-col items-center gap-1">
-          <TypographyH2>Log in</TypographyH2>
-          <TypographyP>Choose your preferred login provider</TypographyP>
-        </div>
-        <div className="flex w-72 flex-col gap-2">
-          <Button
-            disabled={status === "loading"}
-            onClick={() => signIn("github")}
-          >
-            <GitHubLogoIcon className="mr-2" /> GitHub
-          </Button>
-          <Button
-            disabled={status === "loading"}
-            onClick={() => signIn("discord")}
-            className="!bg-indigo-500 hover:!bg-indigo-700"
-          >
-            <DiscordLogoIcon className="mr-2" /> Discord
-          </Button>
+    <>
+      <div className="flex min-h-full items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+        <div className="w-full max-w-md space-y-8">
+          <div>
+            <Logo className="mx-auto mb-4 h-10 w-10" />
+            <TypographyH2 className="text-center">Login</TypographyH2>
+            <TypographyP className="text-center">
+              Choose a session provider
+            </TypographyP>
+          </div>
+          <div className="mt-8 space-y-6">
+            <div className="flex flex-col gap-2">
+              <Button
+                onClick={() => setProvider("discord")}
+                className={cn(
+                  "w-full",
+                  provider === "discord" && "!bg-blue-500"
+                )}
+              >
+                Discord
+              </Button>
+              <Button
+                onClick={() => setProvider("github")}
+                className={cn(
+                  "w-full",
+                  provider === "github" && "!bg-blue-500"
+                )}
+              >
+                GitHub
+              </Button>
+            </div>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-2">
+                <Checkbox id="terms" />
+                <Label htmlFor="terms">Accept terms and conditions</Label>
+              </div>
+            </div>
+
+            <div>
+              <Button
+                disabled={!provider}
+                onClick={() => signIn(provider!)}
+                className="w-full"
+              >
+                Continue
+              </Button>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }

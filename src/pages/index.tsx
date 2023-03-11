@@ -5,6 +5,8 @@ import { api } from "@/utils/api";
 import Card from "@/components/parts/Card";
 import { useToast } from "@/lib/useToast";
 import { beautifyErrors, jabber } from "@/lib/utils";
+import TypographyP from "@/components/ui/typography/p";
+import TypographyH1 from "@/components/ui/typography/h1";
 
 export default function Home() {
   const submit = api.resources.postOne.useMutation();
@@ -53,20 +55,20 @@ export default function Home() {
 
   return (
     <Layout>
-      <Button
-        onClick={handleSubmit}
-        disabled={submit.isLoading}
-        className="mb-5"
-      >
-        submit random resource
-      </Button>
-      {publicResources.isLoading
-        ? "loading..."
-        : publicResources.data && (
-            <div className="grid grid-cols-4 gap-2">{resourceCards}</div>
-          )}
-
-      {submit.error && <p>Something went wrong! {submit.error.message}</p>}
+      <section className="container grid items-center justify-center gap-6 pt-6 pb-8 md:pt-10 md:pb-12 lg:pt-16 lg:pb-24">
+        <div className="mx-auto flex flex-col items-start gap-4 lg:w-[52rem]">
+          <TypographyH1>Resources</TypographyH1>
+          <TypographyP>
+            Community-driven resource gallery for developers, public and
+            open-source for everyone, submit a resource you want to share with
+            the community!
+          </TypographyP>
+        </div>
+        <div className="flex gap-2">
+          <Button>Explore</Button>
+          <Button variant={"link"}>Submit a resource</Button>
+        </div>
+      </section>
     </Layout>
   );
 }
