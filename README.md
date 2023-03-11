@@ -1,28 +1,76 @@
-# Create T3 App
+# Resource App
 
-This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
+A community-driven resource gallery for developers made on top of React
 
-## What's next? How do I make an app with this?
+## Features
 
-We try to keep this project as simple as possible, so you can start with just the scaffolding we set up for you, and add additional things later when they become necessary.
+- Light/dark mode toggle
+- Prisma full integration
+- Next-auth installed
+- tRPC queries and mutations
+- More to come...
 
-If you are not familiar with the different technologies used in this project, please refer to the respective docs. If you still are in the wind, please join our [Discord](https://t3.gg/discord) and ask for help.
+## UI
 
-- [Next.js](https://nextjs.org)
-- [NextAuth.js](https://next-auth.js.org)
-- [Prisma](https://prisma.io)
-- [Tailwind CSS](https://tailwindcss.com)
-- [tRPC](https://trpc.io)
+UI components are made by [shadcn](https://ui.shadcn.com/)
 
-## Learn More
+## Base
 
-To learn more about the [T3 Stack](https://create.t3.gg/), take a look at the following resources:
+This website's base is made by [Create T3](https://create.t3.gg/)
 
-- [Documentation](https://create.t3.gg/)
-- [Learn the T3 Stack](https://create.t3.gg/en/faq#what-learning-resources-are-currently-available) — Check out these awesome tutorials
+## Disclaimer
 
-You can check out the [create-t3-app GitHub repository](https://github.com/t3-oss/create-t3-app) — your feedback and contributions are welcome!
+Some dependencies must be removed, I'm in process of doing so, please be patient
 
-## How do I deploy this?
+## Icons
 
-Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/vercel), [Netlify](https://create.t3.gg/en/deployment/netlify) and [Docker](https://create.t3.gg/en/deployment/docker) for more information.
+I use @heroicons/react for icons
+
+## Environment Variables
+
+To run this project, you will need to add the following environment variables to your .env file
+
+`DATABASE_URL`
+
+`NEXTAUTH_URL`
+
+`DISCORD_CLIENT_ID`
+
+`DISCORD_CLIENT_SECRET`
+
+`GITHUB_CLIENT_ID`
+
+`GITHUB_CLIENT_SECRET`
+
+## Contributing (WIP)
+
+Contributions are always welcome!
+
+See `contributing.md` for ways to get started.
+
+Please adhere to this project's `code of conduct`.
+
+## Tech Stack
+
+- React
+- Next.js
+- TailwindCSS
+- Radix UI
+- tRPC
+- Next-Auth (GitHub and Discord providers)
+
+## FAQ
+
+#### How do I self-host this?
+
+I will not give any support to self-host, you still have permission to do so.
+
+#### UI folder has docs?
+
+As mentioned before, all components are from [shadcn/ui](https://ui.shadcn.com/)
+
+## License
+
+[MIT](https://choosealicense.com/licenses/mit/)
+
+[![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/)
