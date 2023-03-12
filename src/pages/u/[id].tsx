@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import TypographyH3 from "@/components/ui/typography/h3";
 import TypographyP from "@/components/ui/typography/p";
+import { cn } from "@/lib/utils";
 import { api } from "@/utils/api";
 import {
   EllipsisHorizontalIcon,
@@ -24,6 +25,7 @@ import {
 } from "@heroicons/react/24/solid";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 
@@ -32,9 +34,13 @@ export default function User() {
   const user = api.users.getOne.useQuery({ id: String(router.query.id) });
   const { data } = useSession();
 
-  const user_resources = user.data?.resources.map((r, index) => (
-    <ReducedCard key={index} name={r.title} url={r.uri} image={r.image} />
-  ));
+  const user_resources = user.data?.resources.length ? (
+    user.data.resources.map((r, index) => (
+      <ReducedCard key={index} name={r.title} url={r.uri} image={r.image} />
+    ))
+  ) : (
+    <TypographyP>{user.data?.name} has no resources avaiable</TypographyP>
+  );
 
   useEffect(() => {
     if (user.isError || user.error) {
@@ -74,9 +80,11 @@ export default function User() {
                     Report <PaperClipIcon className="h-4 w-4" />
                   </DropdownMenuItem>
                   <Policy policy={data?.user.id === user.data?.id}>
-                    <DropdownMenuItem className="flex justify-between">
-                      Edit <PencilIcon className="h-4 w-4" />
-                    </DropdownMenuItem>
+                    <Link href="/u/edit">
+                      <DropdownMenuItem className="flex justify-between">
+                        Edit <PencilIcon className="h-4 w-4" />
+                      </DropdownMenuItem>
+                    </Link>
                   </Policy>
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -85,7 +93,7 @@ export default function User() {
               <div className="flex flex-col">
                 <div>
                   <TypographyH3>{user.data && user.data.name}</TypographyH3>
-                  <TypographyP className="mb-2 mt-1 border-l-2 border-l-slate-500 pl-2 !text-slate-300">
+                  <TypographyP className="mb-2 mt-1 border-l-2 border-l-slate-500 pl-2 text-slate-700 dark:!text-slate-300">
                     {user.data && user.data.bio}
                   </TypographyP>
                   <TypographyP>
@@ -95,22 +103,28 @@ export default function User() {
                 </div>
               </div>
             </div>
-            <div className="mt-4">
-              <Accordion
-                type="single"
-                collapsible
-                className="w-full rounded-lg bg-slate-300 px-3 dark:bg-slate-700"
-              >
-                <AccordionItem value="item-1">
-                  <AccordionTrigger>Resources</AccordionTrigger>
-                  <AccordionContent className="p-2">
-                    <div className="grid grid-cols-4 gap-2">
-                      {user_resources}
-                    </div>
-                  </AccordionContent>
-                </AccordionItem>
-              </Accordion>
-            </div>
+            {user.data && user.data.settings_showResources && (
+              <div className="mt-4">
+                <Accordion
+                  type="single"
+                  collapsible
+                  className="w-full rounded-lg bg-slate-300 px-3 dark:bg-slate-700"
+                >
+                  <AccordionItem value="item-1">
+                    <AccordionTrigger>Resources</AccordionTrigger>
+                    <AccordionContent className="p-2">
+                      <div
+                        className={cn(
+                          user.data.resources.length && "grid grid-cols-4 gap-2"
+                        )}
+                      >
+                        {user_resources}
+                      </div>
+                    </AccordionContent>
+                  </AccordionItem>
+                </Accordion>
+              </div>
+            )}
           </div>
         </div>
       </div>

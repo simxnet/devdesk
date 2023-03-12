@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import TypographyH4 from "@/components/ui/typography/h4";
+import { useToast } from "@/lib/useToast";
 import { getServerAuthSession } from "@/server/auth";
 import { api } from "@/utils/api";
 import { GetServerSideProps } from "next";
@@ -13,13 +14,18 @@ import { useEffect, useState } from "react";
 
 export default function UserEdit() {
   const session = useSession();
-  const router = useRouter();
-  const { data: user } = api.users.getOne.useQuery({
+  const { toast } = useToast();
+  const {
+    data: user,
+    isLoading,
+    refetch,
+  } = api.users.getOne.useQuery({
     id: String(session.data?.user.id),
   });
 
   // settings states
-  const [newBio, setNewBio] = useState<string | null>();
+  const [newBio, setNewBio] = useState<string>();
+  const [showResources, setShowResources] = useState<boolean>(false);
 
   // manage data changes
   const settings = api.users.updateMe.useMutation();
@@ -27,14 +33,28 @@ export default function UserEdit() {
   const submitSettings = () => {
     settings.mutate({
       bio: String(newBio),
+      showResources,
     });
   };
 
   useEffect(() => {
     if (settings.status === "success") {
-      router.reload();
+      refetch();
+      toast({
+        title: "Saved successfully",
+      });
     }
   }, [settings.status]);
+
+  useEffect(() => {
+    if (user?.settings_showResources) {
+      setShowResources(true);
+    }
+
+    if (user?.bio) {
+      setNewBio(user.bio);
+    }
+  }, [user]);
 
   return (
     <Layout>
@@ -47,7 +67,7 @@ export default function UserEdit() {
               <Input
                 id="bio"
                 onChange={(e) => setNewBio(e.target.value)}
-                defaultValue={user?.bio ?? undefined}
+                defaultValue={newBio}
                 placeholder={user ? user.bio! : "I love cats with boots"}
               />
             </div>
@@ -58,13 +78,17 @@ export default function UserEdit() {
               <Label htmlFor="showresources">
                 Show resources on your profile?
               </Label>
-              <Switch disabled id="showresources" />
+              <Switch
+                onCheckedChange={(e) => setShowResources(e)}
+                checked={showResources}
+                id="showresources"
+              />
             </div>
           </div>
           <div className="ml-auto">
             <Button
               onClick={submitSettings}
-              isLoading={settings.isLoading}
+              isLoading={settings.isLoading || isLoading}
               className="!bg-white !text-slate-900 hover:!bg-white/80"
             >
               Save

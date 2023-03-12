@@ -19,6 +19,8 @@ export const usersRouter = createTRPCRouter({
           id: true,
           image: true,
           bio: true,
+
+          settings_showResources: true,
         },
       });
     }),
@@ -27,6 +29,7 @@ export const usersRouter = createTRPCRouter({
     .input(
       z.object({
         bio: z.string(),
+        showResources: z.boolean(),
       })
     )
     .mutation(({ ctx, input }) => {
@@ -36,6 +39,7 @@ export const usersRouter = createTRPCRouter({
         },
         data: {
           bio: input.bio,
+          settings_showResources: input.showResources,
         },
       });
     }),
