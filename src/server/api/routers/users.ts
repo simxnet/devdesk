@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { createTRPCRouter, publicProcedure } from "../trpc";
+import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 
 export const usersRouter = createTRPCRouter({
   getOne: publicProcedure
@@ -18,6 +18,24 @@ export const usersRouter = createTRPCRouter({
           name: true,
           id: true,
           image: true,
+          bio: true,
+        },
+      });
+    }),
+
+  updateMe: protectedProcedure
+    .input(
+      z.object({
+        bio: z.string(),
+      })
+    )
+    .mutation(({ ctx, input }) => {
+      return ctx.prisma.user.update({
+        where: {
+          id: ctx.session.user.id,
+        },
+        data: {
+          bio: input.bio,
         },
       });
     }),

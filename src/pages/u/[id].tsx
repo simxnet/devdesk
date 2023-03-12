@@ -47,7 +47,7 @@ export default function User() {
       <div className="mx-auto max-w-3xl">
         <div className="overflow-hidden rounded-2xl bg-slate-200 dark:bg-slate-800">
           <div className="h-[200px] w-full bg-blue-400" />
-          <div className="p-6 ">
+          <div className="p-6">
             <div className="relative flex justify-between">
               {user.isLoading ? (
                 <div className="-mt-20 h-24 w-24 rounded-full bg-slate-200 ring-8 ring-slate-200 dark:bg-slate-800 dark:ring-slate-800" />
@@ -67,7 +67,10 @@ export default function User() {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="mr-10 dark:bg-slate-900">
-                  <DropdownMenuItem className="flex justify-between">
+                  <DropdownMenuItem
+                    className="flex justify-between"
+                    disabled={user.data?.id === data?.user.id}
+                  >
                     Report <PaperClipIcon className="h-4 w-4" />
                   </DropdownMenuItem>
                   <Policy policy={data?.user.id === user.data?.id}>
@@ -82,6 +85,9 @@ export default function User() {
               <div className="flex flex-col">
                 <div>
                   <TypographyH3>{user.data && user.data.name}</TypographyH3>
+                  <TypographyP className="mb-2 mt-1 border-l-2 border-l-slate-500 pl-2 !text-slate-300">
+                    {user.data && user.data.bio}
+                  </TypographyP>
                   <TypographyP>
                     {user.data && user.data.name} has submitted{" "}
                     {user.data && user.data.resources.length} resources

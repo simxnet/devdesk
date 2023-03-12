@@ -1,6 +1,6 @@
 import * as React from "react";
 import { type VariantProps, cva } from "class-variance-authority";
-
+import { Ring } from "@uiball/loaders";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
@@ -36,16 +36,26 @@ const buttonVariants = cva(
 
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
-    VariantProps<typeof buttonVariants> {}
+    VariantProps<typeof buttonVariants> {
+  isLoading?: boolean;
+}
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, ...props }, ref) => {
+  ({ className, variant, size, isLoading, ...props }, ref) => {
     return (
       <button
         className={cn(buttonVariants({ variant, size, className }))}
         ref={ref}
+        disabled={props.disabled || isLoading}
         {...props}
-      />
+      >
+        {isLoading && (
+          <div className="mr-2">
+            <Ring size={14} />
+          </div>
+        )}
+        {props.children}
+      </button>
     );
   }
 );
