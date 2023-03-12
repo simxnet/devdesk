@@ -46,6 +46,7 @@ model User {
     email         String?    @unique
     emailVerified DateTime?
     image         String?
+    bio           String?    @default("I like cats with hats")
     badges        Badge[]
     accounts      Account[]
     sessions      Session[]
