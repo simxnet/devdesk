@@ -30,6 +30,7 @@ export default function UserEdit() {
   // settings states
   const [newBio, setNewBio] = useState<string>();
   const [showResources, setShowResources] = useState<boolean>(false);
+  const [newDisplayName, setNewDisplayName] = useState<string>();
 
   // manage data changes
   const settings = api.users.updateMe.useMutation();
@@ -38,6 +39,7 @@ export default function UserEdit() {
     settings.mutate({
       bio: String(newBio),
       showResources,
+      displayName: newDisplayName!,
     });
   };
 
@@ -46,6 +48,11 @@ export default function UserEdit() {
       refetch();
       toast({
         title: "Saved successfully",
+      });
+    } else if (settings.status === "error") {
+      toast({
+        title: "Something happened",
+        variant: "destructive",
       });
     }
   }, [settings.status]);
@@ -57,6 +64,10 @@ export default function UserEdit() {
 
     if (user?.bio) {
       setNewBio(user.bio);
+    }
+
+    if (user?.displayName) {
+      setNewDisplayName(user.displayName);
     }
   }, [user]);
 
@@ -86,8 +97,10 @@ export default function UserEdit() {
                 <Input
                   id="displayName"
                   className="mt-2"
-                  defaultValue={"Test here"}
-                  placeholder={"ChikaShidori"}
+                  maxLength={15}
+                  onChange={(e) => setNewDisplayName(e.target.value)}
+                  defaultValue={newDisplayName}
+                  placeholder={"Your new display name"}
                 />
               </div>
               <div>
@@ -95,6 +108,7 @@ export default function UserEdit() {
                 <Textarea
                   id="bio"
                   className="mt-2"
+                  maxLength={120}
                   onChange={(e) => setNewBio(e.target.value)}
                   defaultValue={newBio}
                   placeholder={user ? user.bio! : "I love cats with boots"}
