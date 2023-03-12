@@ -1,5 +1,6 @@
 import { Layout } from "@/components/Layout/Layout";
 import Policy from "@/components/parts/Policy";
+import ReducedCard from "@/components/parts/ReducedCard";
 import {
   Accordion,
   AccordionContent,
@@ -31,6 +32,10 @@ export default function User() {
   const user = api.users.getOne.useQuery({ id: String(router.query.id) });
   const { data } = useSession();
 
+  const user_resources = user.data?.resources.map((r, index) => (
+    <ReducedCard key={index} name={r.title} url={r.uri} image={r.image} />
+  ));
+
   useEffect(() => {
     if (user.isError || user.error) {
       router.push("/").then(() => console.info("redirected /"));
@@ -45,7 +50,7 @@ export default function User() {
           <div className="p-6 ">
             <div className="relative flex justify-between">
               {user.isLoading ? (
-                <div className="-mt-20 h-24 w-24 animate-pulse rounded-full bg-slate-200 dark:bg-slate-800" />
+                <div className="-mt-20 h-24 w-24 rounded-full bg-slate-200 ring-8 ring-slate-200 dark:bg-slate-800 dark:ring-slate-800" />
               ) : (
                 <Image
                   alt="user avatar"
@@ -61,7 +66,7 @@ export default function User() {
                     <EllipsisHorizontalIcon className="h-6 w-6" />
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent className="mr-10">
+                <DropdownMenuContent className="mr-10 dark:bg-slate-900">
                   <DropdownMenuItem className="flex justify-between">
                     Report <PaperClipIcon className="h-4 w-4" />
                   </DropdownMenuItem>
@@ -92,7 +97,11 @@ export default function User() {
               >
                 <AccordionItem value="item-1">
                   <AccordionTrigger>Resources</AccordionTrigger>
-                  <AccordionContent>Hello, I am WIP</AccordionContent>
+                  <AccordionContent className="p-2">
+                    <div className="grid grid-cols-4 gap-2">
+                      {user_resources}
+                    </div>
+                  </AccordionContent>
                 </AccordionItem>
               </Accordion>
             </div>
