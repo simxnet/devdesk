@@ -30,7 +30,7 @@ export const usersRouter = createTRPCRouter({
       z.object({
         bio: z.string(),
         showResources: z.boolean(),
-        displayName: z.string(),
+        displayName: z.nullable(z.string()),
       })
     )
     .mutation(({ ctx, input }) => {

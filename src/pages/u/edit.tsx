@@ -39,7 +39,7 @@ export default function UserEdit() {
     settings.mutate({
       bio: String(newBio),
       showResources,
-      displayName: newDisplayName!,
+      displayName: newDisplayName ?? null,
     });
   };
 
@@ -72,7 +72,7 @@ export default function UserEdit() {
   }, [user]);
 
   return (
-    <Layout>
+    <Layout title="Editing your profile">
       <div className="mx-auto max-w-3xl">
         <div className="flex flex-col gap-5 rounded-lg border border-slate-300 bg-slate-200 dark:border-slate-700 dark:bg-slate-800">
           <div className="border-b border-b-slate-300 p-4 px-6 dark:border-b-slate-700">

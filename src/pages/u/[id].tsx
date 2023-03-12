@@ -15,14 +15,15 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import TypographyH3 from "@/components/ui/typography/h3";
+import TypographyH4 from "@/components/ui/typography/h4";
 import TypographyP from "@/components/ui/typography/p";
 import { cn } from "@/lib/utils";
 import { api } from "@/utils/api";
 import {
-  EllipsisHorizontalIcon,
+  EllipsisVerticalIcon,
   PaperClipIcon,
   PencilIcon,
-} from "@heroicons/react/24/solid";
+} from "@heroicons/react/24/outline";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
@@ -49,9 +50,9 @@ export default function User() {
   }, [user, router]);
 
   return (
-    <Layout>
+    <Layout title={user.data?.displayName || user.data?.name!}>
       <div className="mx-auto max-w-3xl">
-        <div className="overflow-hidden rounded-2xl bg-slate-200 dark:bg-slate-800">
+        <div className="overflow-hidden rounded-2xl border bg-slate-200 dark:border-slate-700 dark:bg-slate-800">
           <div className="h-[200px] w-full bg-blue-400" />
           <div className="p-6">
             <div className="relative flex justify-between">
@@ -69,7 +70,7 @@ export default function User() {
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant={"ghost"} className="rounded-full p-2">
-                    <EllipsisHorizontalIcon className="h-6 w-6" />
+                    <EllipsisVerticalIcon className="h-6 w-6" />
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="mr-10 dark:bg-slate-900">
@@ -89,10 +90,21 @@ export default function User() {
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
-            <div className="mt-4">
+            <div className="mt-0">
               <div className="flex flex-col">
                 <div>
-                  <TypographyH3>{user.data && user.data.name}</TypographyH3>
+                  {user.data && user.data.displayName ? (
+                    <div className="mb-2 flex flex-col gap-1">
+                      <TypographyH3>
+                        {user.data && user.data.displayName}
+                      </TypographyH3>
+                      <TypographyH4 className="opacity-80">
+                        {user.data && user.data.name}
+                      </TypographyH4>
+                    </div>
+                  ) : (
+                    <TypographyH3>{user.data && user.data.name}</TypographyH3>
+                  )}
                   <TypographyP className="mb-2 mt-1 border-l-2 border-l-slate-500 pl-2 text-slate-700 dark:!text-slate-300">
                     {user.data && user.data.bio}
                   </TypographyP>
