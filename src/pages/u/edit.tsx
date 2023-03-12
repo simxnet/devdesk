@@ -3,10 +3,14 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
+import { Textarea } from "@/components/ui/textarea";
+import TypographyH3 from "@/components/ui/typography/h3";
 import TypographyH4 from "@/components/ui/typography/h4";
+import TypographyP from "@/components/ui/typography/p";
 import { useToast } from "@/lib/useToast";
 import { getServerAuthSession } from "@/server/auth";
 import { api } from "@/utils/api";
+import { ArrowsRightLeftIcon } from "@heroicons/react/24/outline";
 import { GetServerSideProps } from "next";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
@@ -59,40 +63,65 @@ export default function UserEdit() {
   return (
     <Layout>
       <div className="mx-auto max-w-3xl">
-        <div className="flex flex-col gap-5 rounded-lg bg-slate-200 p-3 dark:bg-slate-800">
-          <div className="flex flex-col gap-3">
-            <TypographyH4 className="opacity-70">Profile</TypographyH4>
-            <div className="flex flex-row items-center gap-4">
-              <Label htmlFor="bio">Bio</Label>
-              <Input
-                id="bio"
-                onChange={(e) => setNewBio(e.target.value)}
-                defaultValue={newBio}
-                placeholder={user ? user.bio! : "I love cats with boots"}
-              />
+        <div className="flex flex-col gap-5 rounded-lg border border-slate-300 bg-slate-200 dark:border-slate-700 dark:bg-slate-800">
+          <div className="border-b border-b-slate-300 p-4 px-6 dark:border-b-slate-700">
+            <div className="flex flex-col">
+              <TypographyH3>Settings</TypographyH3>
+              <TypographyP>Manage your account settings</TypographyP>
             </div>
           </div>
-          <div className="flex flex-col gap-3">
-            <TypographyH4 className="opacity-70">Privacy</TypographyH4>
-            <div className="flex flex-row items-center justify-between">
-              <Label htmlFor="showresources">
-                Show resources on your profile?
-              </Label>
-              <Switch
-                onCheckedChange={(e) => setShowResources(e)}
-                checked={showResources}
-                id="showresources"
-              />
+          <div className="p-6">
+            <div className="mb-4 flex items-center rounded-md bg-slate-300 p-4 text-sm text-slate-600 dark:bg-slate-900 dark:text-slate-300">
+              <div className="mr-4 flex">
+                <ArrowsRightLeftIcon className="h-6 w-6" />
+              </div>
+              <div className="flex items-center">
+                Please remember that you logged in using a external provider, we
+                cannot change some information such as profile picture, etc.
+              </div>
             </div>
-          </div>
-          <div className="ml-auto">
-            <Button
-              onClick={submitSettings}
-              isLoading={settings.isLoading || isLoading}
-              className="!bg-white !text-slate-900 hover:!bg-white/80"
-            >
-              Save
-            </Button>
+            <div className="flex flex-col space-y-5">
+              <div>
+                <Label htmlFor="displayName">Display name</Label>
+                <Input
+                  id="displayName"
+                  className="mt-2"
+                  defaultValue={"Test here"}
+                  placeholder={"ChikaShidori"}
+                />
+              </div>
+              <div>
+                <Label htmlFor="bio">Biography</Label>
+                <Textarea
+                  id="bio"
+                  className="mt-2"
+                  onChange={(e) => setNewBio(e.target.value)}
+                  defaultValue={newBio}
+                  placeholder={user ? user.bio! : "I love cats with boots"}
+                />
+              </div>
+            </div>
+            <div className="mt-4">
+              <div className="flex flex-row items-center justify-between">
+                <Label htmlFor="showresources" className="mb-2">
+                  Show resources on your profile?
+                </Label>
+                <Switch
+                  onCheckedChange={(e) => setShowResources(e)}
+                  checked={showResources}
+                  id="showresources"
+                />
+              </div>
+            </div>
+            <div className="mt-5 flex flex-wrap justify-end gap-3">
+              <Button
+                onClick={submitSettings}
+                isLoading={settings.isLoading || isLoading}
+                className="!bg-white !text-slate-900 hover:!bg-white/80"
+              >
+                Save
+              </Button>
+            </div>
           </div>
         </div>
       </div>
