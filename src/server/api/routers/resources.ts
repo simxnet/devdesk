@@ -1,3 +1,4 @@
+import { sendDiscordWebhook } from "@/lib/utils";
 import {
   createTRPCRouter,
   protectedProcedure,
@@ -32,7 +33,7 @@ export const resourcesRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      await ctx.prisma.resource.create({
+      const resource = await ctx.prisma.resource.create({
         data: {
           title: input.title,
           description: input.description,
@@ -44,6 +45,12 @@ export const resourcesRouter = createTRPCRouter({
           author: true,
         },
       });
+
+      await sendDiscordWebhook(
+        "1084642146549776486",
+        "vqNEkla1jiEWlMdy2lDO3-wRhfmTYuUksVM4WakzrzOc0xtuze36CizV6Wae4zLi9sVz",
+        `<:log_heart:1084642897594429501> **${ctx.session.user.name}** just submitted a new resource\n<:log_1:1084642899708350524> [${resource.title}](${resource.uri})`
+      );
 
       return {
         message: `created resource`,
