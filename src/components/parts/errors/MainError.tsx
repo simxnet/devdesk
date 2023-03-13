@@ -1,5 +1,3 @@
-import { ExclamationCircleIcon } from "@heroicons/react/24/solid";
-
 export interface MainErrorProps {
   message: string;
   Icon: React.ForwardRefExoticComponent<
