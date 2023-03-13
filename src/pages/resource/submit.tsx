@@ -71,7 +71,7 @@ export default function ResourceSubmit() {
             </div>
           </div>
           <div className="p-6">
-            <div className="mb-4 flex items-center rounded-md bg-slate-300 p-4 text-sm text-slate-600 dark:bg-slate-900 dark:text-slate-300">
+            <div className="mb-4 flex flex-col items-center rounded-md bg-slate-300 p-4 text-sm text-slate-600 dark:bg-slate-900 dark:text-slate-300 md:flex-row">
               <div className="mr-4 flex">
                 <ExclamationTriangleIcon className="h-6 w-6" />
               </div>
@@ -117,7 +117,7 @@ export default function ResourceSubmit() {
                   type="file"
                   id="rimage"
                 />
-                <TypographyP className="mt-1 !text-sm">
+                <TypographyP className="mt-1 !text-xs md:!text-sm">
                   The image should be a screenshot of the main page of the
                   web/resource
                 </TypographyP>
@@ -127,7 +127,7 @@ export default function ResourceSubmit() {
                 <Button
                   disabled={submit.isLoading}
                   onClick={handleSubmit}
-                  className="!bg-white !text-slate-900 hover:!bg-white/80"
+                  className="w-full !bg-white !text-slate-900 hover:!bg-white/80 md:w-auto"
                 >
                   Submit
                 </Button>
