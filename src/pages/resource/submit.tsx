@@ -23,7 +23,7 @@ export default function ResourceSubmit() {
   const [name, setName] = useState<string | null>();
   const [description, setDescription] = useState<string | null>();
   const [uri, setURI] = useState<string | null>();
-  const [image, setImage] = useState<string | null>(
+  const [image, setImage] = useState<string>(
     "https://us-east-1.tixte.net/uploads/fumos.lol/%F0%9F%93%A0%F0%9F%8F%9C%F0%9F%9A%A4%F0%9F%95%8A%F0%9F%90%BE.png"
   );
 
