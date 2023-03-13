@@ -63,11 +63,13 @@ specifiers:
   prisma: ^4.9.0
   react: 18.2.0
   react-dom: 18.2.0
+  react-uploader: ^3.10.0
   superjson: 1.9.1
   tailwind-merge: ^1.10.0
   tailwindcss: ^3.2.0
   tailwindcss-animate: ^1.0.5
   typescript: ^4.9.5
+  uploader: ^3.9.0
   zod: ^3.20.6
 
 dependencies:
@@ -119,9 +121,11 @@ dependencies:
   next-themes: 0.2.1_nvzgbose6yf6w7ijjprgspqefi
   react: 18.2.0
   react-dom: 18.2.0_react@18.2.0
+  react-uploader: 3.10.0_react@18.2.0
   superjson: 1.9.1
   tailwind-merge: 1.10.0
   tailwindcss-animate: 1.0.5_tailwindcss@3.2.7
+  uploader: 3.9.0
   zod: 3.21.4
 
 devDependencies:
@@ -1672,6 +1676,10 @@ packages:
       react-dom: 18.2.0_react@18.2.0
     dev: false
 
+  /@upload-io/upload-api-client-upload-js/2.15.0:
+    resolution: {integrity: sha512-UGqT4wxCDhTTKnTLvqtKCyPJSswA2z6/Z6/sMakWGdJBBuwCHcOyXgoWafbPILrgWp3oMMQjnTfwwMBmR0O54w==}
+    dev: false
+
   /acorn-jsx/5.3.2_acorn@8.8.2:
     resolution: {integrity: sha512-rq9s+JNhf0IChjtDXxllJ7g41oZk5SlXtp0LHwyA5cejwn7vKmKp4pPri6YEePv2PU65sAsegbXtIinmDFDXgQ==}
     peerDependencies:
@@ -1914,6 +1922,10 @@ packages:
         optional: true
     dependencies:
       typescript: 4.9.5
+    dev: false
+
+  /classnames/2.3.2:
+    resolution: {integrity: sha512-CSbhY4cFEJRe6/GQzIk5qXZ4Jeg5pcsP7b5peFSDpffpe1cqjASH/n9UTjBwOp6XpMSTwQ8Za2K5V02ueA7Tmw==}
     dev: false
 
   /client-only/0.0.1:
@@ -3539,6 +3551,10 @@ packages:
     dependencies:
       '@prisma/engines': 4.11.0
 
+  /progress-smoother/1.4.0:
+    resolution: {integrity: sha512-ctIG/KF/3DQ1zQHMWbXjcnicggTsEzZEA2JEnJNrPtK88tmqN9cfQf01yfLWGCBF93R5XN1EUe/z/IV5NKrmCw==}
+    dev: false
+
   /prop-types/15.8.1:
     resolution: {integrity: sha512-oj87CgZICdulUohogVAR7AjlC0327U4el4L6eAvOqCeudMDVU0NThNaV+b9Df4dXgSP1gXMTnPdhfe/2qDH5cg==}
     dependencies:
@@ -3650,6 +3666,15 @@ packages:
       invariant: 2.2.4
       react: 18.2.0
       tslib: 2.5.0
+    dev: false
+
+  /react-uploader/3.10.0_react@18.2.0:
+    resolution: {integrity: sha512-X59mBrV8+E8QrGiajvgJodrZbsHxHGxBE1/Ym4FRe6+Oy8V8FcVwc5CVuwiKaJn1wk1tN8ufK62HY93mvz62PQ==}
+    peerDependencies:
+      react: '>=16.3.0'
+    dependencies:
+      react: 18.2.0
+      uploader: 3.9.0
     dev: false
 
   /react/18.2.0:
@@ -4017,6 +4042,21 @@ packages:
       escalade: 3.1.1
       picocolors: 1.0.0
     dev: true
+
+  /upload-js/2.11.2:
+    resolution: {integrity: sha512-q6IkwFLA3kL1MbBMvzCbJC0EHjMgjJ399f5QH3Up5rkoVjYXZxTKRgyJQeRT1HpqPQ3gCJdvZuL/Cv1LjBRGMg==}
+    dependencies:
+      '@upload-io/upload-api-client-upload-js': 2.15.0
+      progress-smoother: 1.4.0
+    dev: false
+
+  /uploader/3.9.0:
+    resolution: {integrity: sha512-sv1p4ZFXQReJNsYGBwToREGqh/SsLgmt8mnpluux8ui78vhwSiHt7LOgfRm7iCguYiPQcVS9NsdkJulq4J46qQ==}
+    dependencies:
+      classnames: 2.3.2
+      preact: 10.13.0
+      upload-js: 2.11.2
+    dev: false
 
   /uri-js/4.4.1:
     resolution: {integrity: sha512-7rKUyy33Q1yc98pQ1DAmLtwX109F7TIfWlW1Ydo8Wl1ii1SeHieeh0HHfPeL2fMXK6z0s8ecKs9frCuLJvndBg==}

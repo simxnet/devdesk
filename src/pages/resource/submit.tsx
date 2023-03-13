@@ -13,22 +13,29 @@ import { ExclamationTriangleIcon } from "@heroicons/react/24/solid";
 import { GetServerSideProps } from "next";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
+import { Uploader } from "uploader";
+import { UploadButton } from "react-uploader";
+import { useRouter } from "next/router";
+
+const uploader = Uploader({
+  apiKey: "public_FW25b844V3RNb8Ugr6HnxiZtnpC6", // trial api key
+});
 
 export default function ResourceSubmit() {
   const session = useSession();
   const { toast } = useToast();
+  const router = useRouter();
   const submit = api.resources.postOne.useMutation();
 
   // states
   const [name, setName] = useState<string | null>();
   const [description, setDescription] = useState<string | null>();
   const [uri, setURI] = useState<string | null>();
-  const [image, setImage] = useState<string>(
-    "https://us-east-1.tixte.net/uploads/fumos.lol/%F0%9F%93%A0%F0%9F%8F%9C%F0%9F%9A%A4%F0%9F%95%8A%F0%9F%90%BE.png"
-  );
+  const [image, setImage] = useState<string | null>();
+  const [imageText, setImageText] = useState("Upload a image");
 
   const handleSubmit = () => {
-    if (!name || !description || !uri) {
+    if (!name || !description || !uri || !image) {
       toast({
         title: "Something happened",
         description: "Some fields are missing",
@@ -39,8 +46,9 @@ export default function ResourceSubmit() {
         title: name,
         description: description,
         uri: uri,
-        image,
+        image: image,
       });
+      router.reload();
     }
   };
 
@@ -112,11 +120,19 @@ export default function ResourceSubmit() {
               </div>
               <div>
                 <Label htmlFor="rimage">Image</Label>
-                <input
-                  className="relative m-0 mt-2 block w-full min-w-0 flex-auto cursor-pointer rounded border border-solid border-slate-300 bg-clip-padding py-[0.32rem] px-3 text-base font-normal text-slate-700 transition duration-300 ease-in-out file:-mx-3 file:-my-[0.32rem] file:overflow-hidden file:rounded-none file:border-0 file:border-solid file:border-inherit file:bg-slate-100 file:px-3 file:py-[0.32rem] file:text-slate-700 file:transition file:duration-150 file:ease-in-out file:[margin-inline-end:0.75rem] file:[border-inline-end-width:1px] hover:file:bg-slate-200 focus:text-slate-700 focus:shadow-[0_0_0_1px] focus:outline-none dark:border-slate-600 dark:text-slate-200 dark:file:bg-slate-700 dark:file:text-slate-100"
-                  type="file"
-                  id="rimage"
-                />
+                <div className="flex h-10 w-full rounded-md border border-slate-300 bg-transparent py-2 px-3 text-sm duration-100 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-700 dark:text-slate-50 dark:focus:ring-slate-400 dark:focus:ring-offset-slate-900">
+                  <UploadButton
+                    uploader={uploader}
+                    onComplete={(files) => {
+                      setImage(files[0]?.fileUrl);
+                      setImageText("Done, 1 image uploaded");
+                    }}
+                  >
+                    {({ onClick }) => (
+                      <button onClick={onClick}>{imageText}</button>
+                    )}
+                  </UploadButton>
+                </div>
                 <TypographyP className="mt-1 !text-xs md:!text-sm">
                   The image should be a screenshot of the main page of the
                   web/resource
@@ -125,7 +141,7 @@ export default function ResourceSubmit() {
 
               <div className="mt-5 flex flex-wrap justify-end gap-3">
                 <Button
-                  disabled={submit.isLoading}
+                  isLoading={submit.isLoading}
                   onClick={handleSubmit}
                   className="w-full !bg-white !text-slate-900 hover:!bg-white/80 md:w-auto"
                 >

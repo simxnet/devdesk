@@ -58,9 +58,11 @@
     "next-themes": "^0.2.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "react-uploader": "^3.10.0",
     "superjson": "1.9.1",
     "tailwind-merge": "^1.10.0",
     "tailwindcss-animate": "^1.0.5",
+    "uploader": "^3.9.0",
     "zod": "^3.20.6"
   },
   "devDependencies": {
