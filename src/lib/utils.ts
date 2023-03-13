@@ -29,4 +29,21 @@ export function beautifyErrors(error: string) {
   return errors[error] ?? error;
 }
 
+export async function sendDiscordWebhook(
+  id: string,
+  token: string,
+  content: string
+) {
+  await fetch(`https://discord.com/api/v10/webhooks/${id}/${token}?wait=true`, {
+    method: "POST",
+    body: JSON.stringify({
+      content,
+      embeds: [],
+    }),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+}
+
 export const jabber = new Jabber();

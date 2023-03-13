@@ -1,3 +1,4 @@
+import { sendDiscordWebhook } from "@/lib/utils";
 import {
   createTRPCRouter,
   protectedProcedure,
@@ -32,7 +33,7 @@ export const resourcesRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      await ctx.prisma.resource.create({
+      const resource = await ctx.prisma.resource.create({
         data: {
           title: input.title,
           description: input.description,
@@ -44,6 +45,20 @@ export const resourcesRouter = createTRPCRouter({
           author: true,
         },
       });
+
+      await sendDiscordWebhook(
+        "1084642146549776486",
+        "vqNEkla1jiEWlMdy2lDO3-wRhfmTYuUksVM4WakzrzOc0xtuze36CizV6Wae4zLi9sVz",
+        `<:log_heart:1084642897594429501> **${
+          ctx.session.user.name
+        }** just submitted a new resource\n<:log_2:1084642900740165664> [${
+          resource.title
+        }](${resource.uri})\n<:log_1:1084642899708350524> [Resource link](${
+          process.env.NODE_ENV === "development"
+            ? `http://localhost:3000/resource/${resource.id}`
+            : `https://resourceapp.vercel.app/resource/${resource.id}`
+        })`
+      );
 
       return {
         message: `created resource`,
