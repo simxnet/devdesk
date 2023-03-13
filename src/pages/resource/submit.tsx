@@ -5,9 +5,59 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import TypographyH3 from "@/components/ui/typography/h3";
 import TypographyP from "@/components/ui/typography/p";
+import { useToast } from "@/lib/useToast";
+import { beautifyErrors } from "@/lib/utils";
+import { getServerAuthSession } from "@/server/auth";
+import { api } from "@/utils/api";
 import { ExclamationTriangleIcon } from "@heroicons/react/24/solid";
+import { GetServerSideProps } from "next";
+import { useSession } from "next-auth/react";
+import { useEffect, useState } from "react";
 
 export default function ResourceSubmit() {
+  const session = useSession();
+  const { toast } = useToast();
+  const submit = api.resources.postOne.useMutation();
+
+  // states
+  const [name, setName] = useState<string | null>();
+  const [description, setDescription] = useState<string | null>();
+  const [uri, setURI] = useState<string | null>();
+  const [image, setImage] = useState<string | null>(
+    "https://us-east-1.tixte.net/uploads/fumos.lol/%F0%9F%93%A0%F0%9F%8F%9C%F0%9F%9A%A4%F0%9F%95%8A%F0%9F%90%BE.png"
+  );
+
+  const handleSubmit = () => {
+    if (!name || !description || !uri) {
+      toast({
+        title: "Something happened",
+        description: "Some fields are missing",
+        variant: "destructive",
+      });
+    } else {
+      submit.mutate({
+        title: name,
+        description: description,
+        uri: uri,
+        image,
+      });
+    }
+  };
+
+  useEffect(() => {
+    if (submit.status === "success") {
+      toast({
+        title: "Resource submitted successfully",
+      });
+    }
+    if (submit.status === "error") {
+      toast({
+        title: "Something happened",
+        description: beautifyErrors(submit.error.message),
+        variant: "destructive",
+      });
+    }
+  }, [submit.status]);
   return (
     <Layout title="Adding a new resource">
       <div className="mx-auto max-w-3xl">
@@ -38,6 +88,7 @@ export default function ResourceSubmit() {
                   className="mt-2"
                   maxLength={30}
                   placeholder={"Resource name"}
+                  onChange={(e) => setName(e.target.value)}
                 />
               </div>
               <div>
@@ -47,6 +98,16 @@ export default function ResourceSubmit() {
                   className="mt-2"
                   maxLength={250}
                   placeholder={"Resource description"}
+                  onChange={(e) => setDescription(e.target.value)}
+                />
+              </div>
+              <div>
+                <Label htmlFor="rurl">URL</Label>
+                <Input
+                  id="rurl"
+                  className="mt-2"
+                  placeholder={"Resource url"}
+                  onChange={(e) => setURI(e.target.value)}
                 />
               </div>
               <div>
@@ -63,7 +124,11 @@ export default function ResourceSubmit() {
               </div>
 
               <div className="mt-5 flex flex-wrap justify-end gap-3">
-                <Button className="!bg-white !text-slate-900 hover:!bg-white/80">
+                <Button
+                  disabled={submit.isLoading}
+                  onClick={handleSubmit}
+                  className="!bg-white !text-slate-900 hover:!bg-white/80"
+                >
                   Submit
                 </Button>
               </div>
@@ -74,3 +139,17 @@ export default function ResourceSubmit() {
     </Layout>
   );
 }
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const session = await getServerAuthSession(context);
+
+  if (!session) {
+    return {
+      notFound: true,
+    };
+  }
+
+  return {
+    props: {},
+  };
+};
