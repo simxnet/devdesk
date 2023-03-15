@@ -30,20 +30,21 @@ import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export default function User() {
   const router = useRouter();
   const user = api.users.single.useQuery({ id: String(router.query.id) });
   const resources = api.resources.user.useQuery();
   const { data } = useSession();
+  const [metaVisible, setMetaVisible] = useState(false);
 
   const user_resources = resources.data?.length ? (
     resources.data?.map((r, index) => (
       <ReducedCard key={index} name={r.title} url={r.uri} image={r.image} />
     ))
   ) : (
-    <TypographyP>{user.data?.name} has no resources avaiable</TypographyP>
+    <TypographyP>{user.data?.name} has no resources available</TypographyP>
   );
 
   useEffect(() => {
@@ -52,33 +53,37 @@ export default function User() {
     }
   }, [user, router]);
 
+  useEffect(() => {
+    if (user.data) {
+      setMetaVisible(true);
+    }
+  }, [user.data]);
   return (
     <Layout title={user.data?.displayName || user.data?.name!}>
-      <Head>
-        <meta
-          property="og:title"
-          content={`${
-            (user.data && user.data?.displayName) || user.data?.name!
-          } on DevDesk`}
-        />
-        <meta property="og:type" content="website" />
-        <meta
-          property="og:url"
-          content={`https://devdesk.vercel.app/u/${user.data && user.data?.id}`}
-        />
-        <meta property="og:image" content={user.data?.image!} />
-        <meta
-          property="og:description"
-          content={
-            user.data?.bio ??
-            `See ${user.data && user.data?.name}'s profile on DevDesk!`
-          }
-        />
-        <meta
-          name="theme-color"
-          content={(user.data && user.data?.bannerColor) ?? "#FF0000"}
-        />
-      </Head>
+      {metaVisible && (
+        <Head>
+          <meta
+            property="og:title"
+            content={`${user.data?.displayName || user.data?.name!} on DevDesk`}
+          />
+          <meta property="og:type" content="website" />
+          <meta
+            property="og:url"
+            content={`https://devdesk.vercel.app/u/${user.data?.id}`}
+          />
+          <meta property="og:image" content={user.data?.image!} />
+          <meta
+            property="og:description"
+            content={
+              user.data?.bio ?? `See ${user.data?.name}'s profile on DevDesk!`
+            }
+          />
+          <meta
+            name="theme-color"
+            content={user.data?.bannerColor ?? "#FF0000"}
+          />
+        </Head>
+      )}
       <div className="mx-auto max-w-3xl">
         <div className="overflow-hidden rounded-2xl border bg-slate-200 dark:border-slate-700 dark:bg-slate-800">
           <div
