@@ -13,10 +13,10 @@ datasource db {
 // Necessary for Next auth
 model Account {
     id                String  @id @default(cuid())
-    userId            String
+    userId            String  @map("user_id")
     type              String
     provider          String
-    providerAccountId String
+    providerAccountId String  @map("provider_account_id")
     refresh_token     String?
     access_token      String?
     expires_at        Int?
@@ -32,8 +32,8 @@ model Account {
 
 model Session {
     id           String   @id @default(cuid())
-    sessionToken String   @unique
-    userId       String
+    sessionToken String   @unique @map("session_token")
+    userId       String   @map("user_id")
     expires      DateTime
     user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -47,25 +47,34 @@ model User {
     bannerColor   String?   @default("#9496df")
     banner        String?
     email         String?   @unique
-    emailVerified DateTime?
+    emailVerified DateTime? @map("email_verified")
     image         String?
-    bio           String?   @default("I like cats with hats")
+    bio           String?
 
-    settings_showResources Boolean @default(true)
-
-    badges    Badge[]
-    accounts  Account[]
-    sessions  Session[]
-    resources Resource[]
+    badges      Badge[]
+    accounts    Account[]
+    sessions    Session[]
+    resources   Resource[]
+    preferences UserPreferences?
 
     @@map("users")
+}
+
+model UserPreferences {
+    userId String @id @map("user_id")
+
+    /// If the user wants to show their resources on their profile
+    showResources Boolean @default(true) @map("show_resources")
+    user          User    @relation(fields: [userId], references: [id])
+
+    @@map("user_preferences")
 }
 
 model Badge {
     id     String  @id @default(cuid())
     name   String
     user   User?   @relation(fields: [userId], references: [id])
-    userId String?
+    userId String? @map("user_id")
 
     @@map("badges")
 }
@@ -74,8 +83,8 @@ model Resource {
     id          String   @id @default(cuid())
     title       String
     description String
-    uri         String
-    image       String
+    uri         String   @unique
+    image       String   @unique
     author      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
     createdAt   DateTime @default(now()) @map("created_at")
     updatedAt   DateTime @updatedAt @map("updated_at")
