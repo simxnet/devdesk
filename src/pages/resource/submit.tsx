@@ -6,7 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import TypographyH3 from "@/components/ui/typography/h3";
 import TypographyP from "@/components/ui/typography/p";
 import { useToast } from "@/lib/useToast";
-import { beautifyErrors } from "@/lib/utils";
+import { beautifyErrors, uploader_key } from "@/lib/utils";
 import { getServerAuthSession } from "@/server/auth";
 import { api } from "@/utils/api";
 import { ExclamationTriangleIcon } from "@heroicons/react/24/solid";
@@ -17,12 +17,7 @@ import { Uploader } from "uploader";
 import { UploadButton } from "react-uploader";
 import { useRouter } from "next/router";
 
-const uploader = Uploader({
-  apiKey: "public_FW25b844V3RNb8Ugr6HnxiZtnpC6", // trial api key
-});
-
 export default function ResourceSubmit() {
-  const session = useSession();
   const { toast } = useToast();
   const router = useRouter();
   const submit = api.resources.postOne.useMutation();
@@ -51,6 +46,10 @@ export default function ResourceSubmit() {
       router.reload();
     }
   };
+
+  const uploader = Uploader({
+    apiKey: uploader_key, // trial api key
+  });
 
   useEffect(() => {
     if (submit.status === "success") {
@@ -118,26 +117,28 @@ export default function ResourceSubmit() {
                   onChange={(e) => setURI(e.target.value)}
                 />
               </div>
-              <div>
-                <Label htmlFor="rimage">Image</Label>
-                <div className="flex h-10 w-full rounded-md border border-slate-300 bg-transparent py-2 px-3 text-sm duration-100 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-700 dark:text-slate-50 dark:focus:ring-slate-400 dark:focus:ring-offset-slate-900">
-                  <UploadButton
-                    uploader={uploader}
-                    onComplete={(files) => {
-                      setImage(files[0]?.fileUrl);
-                      setImageText("Done, 1 image uploaded");
-                    }}
-                  >
-                    {({ onClick }) => (
-                      <button onClick={onClick}>{imageText}</button>
-                    )}
-                  </UploadButton>
+              {uploader_key && (
+                <div>
+                  <Label htmlFor="rimage">Image</Label>
+                  <div className="flex h-10 w-full rounded-md border border-slate-300 bg-transparent py-2 px-3 text-sm duration-100 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-700 dark:text-slate-50 dark:focus:ring-slate-400 dark:focus:ring-offset-slate-900">
+                    <UploadButton
+                      uploader={uploader}
+                      onComplete={(files) => {
+                        setImage(files[0]?.fileUrl);
+                        setImageText("Done, 1 image uploaded");
+                      }}
+                    >
+                      {({ onClick }) => (
+                        <button onClick={onClick}>{imageText}</button>
+                      )}
+                    </UploadButton>
+                  </div>
+                  <TypographyP className="mt-1 !text-xs md:!text-sm">
+                    The image should be a screenshot of the main page of the
+                    web/resource
+                  </TypographyP>
                 </div>
-                <TypographyP className="mt-1 !text-xs md:!text-sm">
-                  The image should be a screenshot of the main page of the
-                  web/resource
-                </TypographyP>
-              </div>
+              )}
 
               <div className="mt-5 flex flex-wrap justify-end gap-3">
                 <Button

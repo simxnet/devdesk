@@ -1,3 +1,4 @@
+import { siteConfig } from "@/config/site";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import Logo from "../Logo";
@@ -5,9 +6,7 @@ import { Button } from "../ui/button";
 import Session from "./withAuth/Session";
 import Login from "./withoutAuth/Login";
 
-export interface HeaderProps {}
-
-export default function Header({}: HeaderProps): JSX.Element {
+export default function Header(): JSX.Element {
   const { data, status } = useSession();
 
   return (
@@ -16,7 +15,7 @@ export default function Header({}: HeaderProps): JSX.Element {
         <div className="flex items-center font-bold">
           <Link href="/">
             <Button variant={"ghost"}>
-              <Logo className="mr-2 h-6 w-6" /> Resources
+              <Logo className="mr-2 h-6 w-6" /> {siteConfig.name}
             </Button>
           </Link>
         </div>

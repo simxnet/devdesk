@@ -14,7 +14,9 @@ import {
   ArrowTopRightOnSquareIcon,
   SunIcon,
   UserIcon,
-} from "@heroicons/react/24/outline";
+  Cog6ToothIcon,
+  PlusIcon,
+} from "@heroicons/react/24/solid";
 import { type Session as ISession } from "next-auth";
 import { signOut } from "next-auth/react";
 import { useTheme } from "next-themes";
@@ -49,6 +51,18 @@ export default function Session({ data }: SessionProps): JSX.Element {
               <DropdownMenuItem>
                 <UserIcon className="mr-2 h-4 w-4" />
                 <span>Profile</span>
+              </DropdownMenuItem>
+            </Link>
+            <Link href={`/u/edit`}>
+              <DropdownMenuItem>
+                <Cog6ToothIcon className="mr-2 h-4 w-4" />
+                <span>Settings</span>
+              </DropdownMenuItem>
+            </Link>
+            <Link href={`/resource/submit`}>
+              <DropdownMenuItem>
+                <PlusIcon className="mr-2 h-4 w-4" />
+                <span>Submit</span>
               </DropdownMenuItem>
             </Link>
             <DropdownMenuItem onSelect={(e: Event) => e.preventDefault()}>

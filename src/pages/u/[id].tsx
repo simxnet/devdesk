@@ -23,7 +23,7 @@ import {
   EllipsisVerticalIcon,
   PaperClipIcon,
   PencilIcon,
-} from "@heroicons/react/24/outline";
+} from "@heroicons/react/24/solid";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
@@ -53,7 +53,13 @@ export default function User() {
     <Layout title={user.data?.displayName || user.data?.name!}>
       <div className="mx-auto max-w-3xl">
         <div className="overflow-hidden rounded-2xl border bg-slate-200 dark:border-slate-700 dark:bg-slate-800">
-          <div className="h-[200px] w-full bg-blue-400" />
+          <div
+            className="h-[200px] w-full bg-cover bg-no-repeat"
+            style={{
+              backgroundColor: user.data?.bannerColor ?? "rgb(30 41 59)",
+              backgroundImage: user.data?.banner ?? undefined,
+            }}
+          />
           <div className="p-6">
             <div className="relative flex justify-between">
               {user.isLoading ? (

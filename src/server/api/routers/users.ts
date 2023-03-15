@@ -20,6 +20,8 @@ export const usersRouter = createTRPCRouter({
           id: true,
           image: true,
           bio: true,
+          banner: true,
+          bannerColor: true,
           settings_showResources: true,
         },
       });
@@ -31,6 +33,8 @@ export const usersRouter = createTRPCRouter({
         bio: z.string(),
         showResources: z.boolean(),
         displayName: z.nullable(z.string()),
+        bannerColor: z.nullable(z.string()),
+        banner: z.nullable(z.string()),
       })
     )
     .mutation(({ ctx, input }) => {
@@ -42,6 +46,8 @@ export const usersRouter = createTRPCRouter({
           bio: input.bio,
           settings_showResources: input.showResources,
           displayName: input.displayName,
+          bannerColor: input.bannerColor ?? "#1e293b",
+          banner: input.banner,
         },
       });
     }),

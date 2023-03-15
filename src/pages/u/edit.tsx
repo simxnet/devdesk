@@ -1,11 +1,15 @@
 import { Layout } from "@/components/Layout/Layout";
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import TypographyH3 from "@/components/ui/typography/h3";
-import TypographyH4 from "@/components/ui/typography/h4";
 import TypographyP from "@/components/ui/typography/p";
 import { useToast } from "@/lib/useToast";
 import { getServerAuthSession } from "@/server/auth";
@@ -13,8 +17,9 @@ import { api } from "@/utils/api";
 import { ArrowsRightLeftIcon } from "@heroicons/react/24/outline";
 import { GetServerSideProps } from "next";
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/router";
+import Link from "next/link";
 import { useEffect, useState } from "react";
+import { BlockPicker, ColorResult } from "react-color";
 
 export default function UserEdit() {
   const session = useSession();
@@ -23,14 +28,21 @@ export default function UserEdit() {
     data: user,
     isLoading,
     refetch,
-  } = api.users.getOne.useQuery({
-    id: String(session.data?.user.id),
-  });
+  } = api.users.getOne.useQuery(
+    {
+      id: String(session.data?.user.id),
+    },
+    {
+      refetchOnWindowFocus: false,
+    }
+  );
 
   // settings states
   const [newBio, setNewBio] = useState<string>();
   const [showResources, setShowResources] = useState<boolean>(false);
-  const [newDisplayName, setNewDisplayName] = useState<string>();
+  const [newDisplayName, setNewDisplayName] = useState<string | null>(null);
+  const [newBannerColor, setNewbannerColor] = useState<string | null>(null);
+  const [newBanner, setNewbanner] = useState<string | null>(null);
 
   // manage data changes
   const settings = api.users.updateMe.useMutation();
@@ -39,8 +51,14 @@ export default function UserEdit() {
     settings.mutate({
       bio: String(newBio),
       showResources,
-      displayName: newDisplayName ?? null,
+      displayName: newDisplayName,
+      bannerColor: newBannerColor,
+      banner: newBanner,
     });
+  };
+
+  const handleColorChange = ({ hex }: ColorResult) => {
+    setNewbannerColor(hex);
   };
 
   useEffect(() => {
@@ -68,6 +86,14 @@ export default function UserEdit() {
 
     if (user?.displayName) {
       setNewDisplayName(user.displayName);
+    }
+
+    if (user?.banner) {
+      setNewbanner(user.banner);
+    }
+
+    if (user?.bannerColor) {
+      setNewbannerColor(user.bannerColor);
     }
   }, [user]);
 
@@ -99,9 +125,49 @@ export default function UserEdit() {
                   className="mt-2"
                   maxLength={15}
                   onChange={(e) => setNewDisplayName(e.target.value)}
-                  defaultValue={newDisplayName}
+                  defaultValue={newDisplayName ?? ""}
                   placeholder={"Your new display name"}
                 />
+              </div>
+              <div>
+                <Label htmlFor="bcolor">Banner color</Label>
+                <div className="flex h-10 w-full items-center justify-between rounded-md border border-slate-300 bg-transparent py-2 px-3 text-sm duration-100 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-700 dark:text-slate-50 dark:focus:ring-slate-400 dark:focus:ring-offset-slate-900">
+                  {newBannerColor}
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <div
+                        className="h-6 w-6 cursor-pointer rounded-full"
+                        style={{
+                          backgroundColor: newBannerColor!,
+                        }}
+                      />
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent className="!border-0 !bg-transparent p-3 !shadow-none">
+                      <BlockPicker
+                        color={newBannerColor!}
+                        onChangeComplete={handleColorChange}
+                      />
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </div>
+              </div>
+              <div>
+                <Label htmlFor="banner">Banner URL</Label>
+                <Input
+                  disabled
+                  id="banner"
+                  className="mt-2"
+                  placeholder={"Your new banner url"}
+                />
+                <TypographyP className="!text-sm">
+                  I am still building this feature, any help is appreciated,{" "}
+                  <Link
+                    href="https://github.com/chikaof/devdesk/pulls"
+                    className="text-blue-400 underline"
+                  >
+                    make a pr
+                  </Link>
+                </TypographyP>
               </div>
               <div>
                 <Label htmlFor="bio">Biography</Label>
@@ -111,7 +177,7 @@ export default function UserEdit() {
                   maxLength={120}
                   onChange={(e) => setNewBio(e.target.value)}
                   defaultValue={newBio}
-                  placeholder={user ? user.bio! : "I love cats with boots"}
+                  placeholder={user ? user.bio! : "Describe yourself!"}
                 />
               </div>
             </div>
