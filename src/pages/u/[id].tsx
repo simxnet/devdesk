@@ -37,7 +37,8 @@ export default function User() {
   const user = api.users.single.useQuery({ id: String(router.query.id) });
   const resources = api.resources.user.useQuery();
   const { data } = useSession();
-  const [metaVisible, setMetaVisible] = useState(false);
+
+  if (!user.data) return <></>;
 
   const user_resources = resources.data?.length ? (
     resources.data?.map((r, index) => (
@@ -52,38 +53,30 @@ export default function User() {
       router.push("/").then(() => console.info("redirected /"));
     }
   }, [user, router]);
-
-  useEffect(() => {
-    if (user.data) {
-      setMetaVisible(true);
-    }
-  }, [user.data]);
   return (
-    <Layout title={user.data?.displayName || user.data?.name!}>
-      {metaVisible && (
-        <Head>
-          <meta
-            property="og:title"
-            content={`${user.data?.displayName || user.data?.name!} on DevDesk`}
-          />
-          <meta property="og:type" content="website" />
-          <meta
-            property="og:url"
-            content={`https://devdesk.vercel.app/u/${user.data?.id}`}
-          />
-          <meta property="og:image" content={user.data?.image!} />
-          <meta
-            property="og:description"
-            content={
-              user.data?.bio ?? `See ${user.data?.name}'s profile on DevDesk!`
-            }
-          />
-          <meta
-            name="theme-color"
-            content={user.data?.bannerColor ?? "#FF0000"}
-          />
-        </Head>
-      )}
+    <Layout title={user.data.displayName! || user.data.name!}>
+      <Head>
+        <meta
+          property="og:title"
+          content={`${user.data.displayName || user.data.name} on DevDesk`}
+        />
+        <meta property="og:type" content="website" />
+        <meta
+          property="og:url"
+          content={`https://devdesk.vercel.app/u/${user.data.id}`}
+        />
+        <meta property="og:image" content={user.data.image!} />
+        <meta
+          property="og:description"
+          content={
+            user.data?.bio ?? `See ${user.data.name}'s profile on DevDesk!`
+          }
+        />
+        <meta
+          name="theme-color"
+          content={user.data.bannerColor! ?? "#FF0000"}
+        />
+      </Head>
       <div className="mx-auto max-w-3xl">
         <div className="overflow-hidden rounded-2xl border bg-slate-200 dark:border-slate-700 dark:bg-slate-800">
           <div
