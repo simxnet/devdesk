@@ -30,15 +30,13 @@ import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 export default function User() {
   const router = useRouter();
   const user = api.users.single.useQuery({ id: String(router.query.id) });
   const resources = api.resources.user.useQuery();
   const { data } = useSession();
-
-  if (!user.data) return <></>;
 
   const user_resources = resources.data?.length ? (
     resources.data?.map((r, index) => (
@@ -53,6 +51,8 @@ export default function User() {
       router.push("/").then(() => console.info("redirected /"));
     }
   }, [user, router]);
+
+  if (!user.data) return <></>;
   return (
     <Layout title={user.data.displayName! || user.data.name!}>
       <Head>
