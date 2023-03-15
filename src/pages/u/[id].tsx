@@ -57,23 +57,26 @@ export default function User() {
       <Head>
         <meta
           property="og:title"
-          content={`${user.data?.displayName || user.data?.name!} on DevDesk`}
+          content={`${
+            (user.data && user.data?.displayName) || user.data?.name!
+          } on DevDesk`}
         />
         <meta property="og:type" content="website" />
         <meta
           property="og:url"
-          content={`https://devdesk.vercel.app/u/${user.data?.id}`}
+          content={`https://devdesk.vercel.app/u/${user.data && user.data?.id}`}
         />
         <meta property="og:image" content={user.data?.image!} />
         <meta
           property="og:description"
           content={
-            user.data?.bio ?? `See ${user.data?.name}'s profile on DevDesk!`
+            user.data?.bio ??
+            `See ${user.data && user.data?.name}'s profile on DevDesk!`
           }
         />
         <meta
           name="theme-color"
-          content={user.data?.bannerColor ?? "#FF0000"}
+          content={(user.data && user.data?.bannerColor) ?? "#FF0000"}
         />
       </Head>
       <div className="mx-auto max-w-3xl">
