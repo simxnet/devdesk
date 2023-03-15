@@ -1,4 +1,5 @@
 import { Layout } from "@/components/Layout/Layout";
+import DevBadge from "@/components/parts/DevBadge";
 import Policy from "@/components/parts/Policy";
 import ReducedCard from "@/components/parts/ReducedCard";
 import {
@@ -102,22 +103,34 @@ export default function User() {
                 <div>
                   {user.data && user.data.displayName ? (
                     <div className="mb-2 flex flex-col gap-1">
-                      <TypographyH3>
-                        {user.data && user.data.displayName}
+                      <TypographyH3 className="flex items-center">
+                        {user.data && user.data.displayName}{" "}
+                        {user.data && user.data.permissions === 1 && (
+                          <DevBadge
+                            color={user.data?.bannerColor ?? "rgb(30 41 59)"}
+                          />
+                        )}
                       </TypographyH3>
                       <TypographyH4 className="opacity-80">
                         {user.data && user.data.name}
                       </TypographyH4>
                     </div>
                   ) : (
-                    <TypographyH3>{user.data && user.data.name}</TypographyH3>
+                    <TypographyH3 className="flex items-center">
+                      {user.data && user.data.name}{" "}
+                      {user.data && user.data.permissions === 1 && (
+                        <DevBadge
+                          color={user.data?.bannerColor ?? "rgb(30 41 59)"}
+                        />
+                      )}
+                    </TypographyH3>
                   )}
                   <TypographyP className="mb-2 mt-1 border-l-2 border-l-slate-500 pl-2 text-slate-700 dark:!text-slate-300">
                     {user.data && user.data.bio}
                   </TypographyP>
                   <TypographyP>
-                    {user.data && user.data.name} has submitted{" "}
-                    {user.data && user.data.resources.length} resources
+                    {(user.data && user.data.name) ?? "User"} has submitted{" "}
+                    {(user.data && user.data.resources.length) ?? 0} resources
                   </TypographyP>
                 </div>
               </div>
