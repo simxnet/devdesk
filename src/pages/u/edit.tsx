@@ -28,7 +28,7 @@ export default function UserEdit() {
     data: user,
     isLoading,
     refetch,
-  } = api.users.getOne.useQuery(
+  } = api.users.single.useQuery(
     {
       id: String(session.data?.user.id),
     },
@@ -38,22 +38,24 @@ export default function UserEdit() {
   );
 
   // settings states
-  const [newBio, setNewBio] = useState<string>();
+  const [newBio, setNewBio] = useState<string | null>(null);
   const [showResources, setShowResources] = useState<boolean>(false);
   const [newDisplayName, setNewDisplayName] = useState<string | null>(null);
   const [newBannerColor, setNewbannerColor] = useState<string | null>(null);
   const [newBanner, setNewbanner] = useState<string | null>(null);
 
   // manage data changes
-  const settings = api.users.updateMe.useMutation();
+  const settings = api.users.update.useMutation();
 
   const submitSettings = () => {
     settings.mutate({
-      bio: String(newBio),
-      showResources,
+      bio: newBio,
       displayName: newDisplayName,
       bannerColor: newBannerColor,
       banner: newBanner,
+      preferences: {
+        showResources,
+      },
     });
   };
 
@@ -76,7 +78,7 @@ export default function UserEdit() {
   }, [settings.status]);
 
   useEffect(() => {
-    if (user?.settings_showResources) {
+    if (user?.preferences?.showResources) {
       setShowResources(true);
     }
 
@@ -176,8 +178,8 @@ export default function UserEdit() {
                   className="mt-2"
                   maxLength={120}
                   onChange={(e) => setNewBio(e.target.value)}
-                  defaultValue={newBio}
-                  placeholder={user ? user.bio! : "Describe yourself!"}
+                  defaultValue={newBio ?? undefined}
+                  placeholder={"Describe yourself!"}
                 />
               </div>
             </div>

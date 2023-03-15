@@ -1,13 +1,15 @@
 import { sendDiscordWebhook } from "@/lib/utils";
 import {
   createTRPCRouter,
+  devProcedure,
   protectedProcedure,
   publicProcedure,
 } from "@/server/api/trpc";
+import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 export const resourcesRouter = createTRPCRouter({
-  getAll: publicProcedure.query(({ ctx }) => {
+  all: publicProcedure.query(({ ctx }) => {
     return ctx.prisma.resource.findMany({
       include: {
         author: true,
@@ -15,7 +17,7 @@ export const resourcesRouter = createTRPCRouter({
     });
   }),
 
-  getMine: protectedProcedure.query(({ ctx }) => {
+  user: protectedProcedure.query(({ ctx }) => {
     return ctx.prisma.resource.findMany({
       where: {
         userId: ctx.session.user.id,
@@ -23,7 +25,37 @@ export const resourcesRouter = createTRPCRouter({
     });
   }),
 
-  postOne: protectedProcedure
+  delete: protectedProcedure
+    .input(
+      z.object({
+        id: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const resource = await ctx.prisma.resource.findFirst({
+        where: {
+          id: input.id,
+        },
+      });
+
+      const user = await ctx.prisma.user.findFirst({
+        where: {
+          id: ctx.session.user.id,
+        },
+      });
+
+      if (resource?.userId === ctx.session.user.id || user?.permissions === 1) {
+        return ctx.prisma.resource.delete({
+          where: {
+            id: input.id,
+          },
+        });
+      } else {
+        throw new TRPCError({ code: "UNAUTHORIZED" });
+      }
+    }),
+
+  add: protectedProcedure
     .input(
       z.object({
         title: z.string(),

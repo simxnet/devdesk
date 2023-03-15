@@ -2,7 +2,7 @@ import { z } from "zod";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 
 export const usersRouter = createTRPCRouter({
-  getOne: publicProcedure
+  single: publicProcedure
     .input(
       z.object({
         id: z.string(),
@@ -22,19 +22,26 @@ export const usersRouter = createTRPCRouter({
           bio: true,
           banner: true,
           bannerColor: true,
-          settings_showResources: true,
+          permissions: true,
+          preferences: {
+            select: {
+              showResources: true,
+            },
+          },
         },
       });
     }),
 
-  updateMe: protectedProcedure
+  update: protectedProcedure
     .input(
       z.object({
-        bio: z.string(),
-        showResources: z.boolean(),
+        bio: z.nullable(z.string()),
         displayName: z.nullable(z.string()),
         bannerColor: z.nullable(z.string()),
         banner: z.nullable(z.string()),
+        preferences: z.object({
+          showResources: z.boolean(),
+        }),
       })
     )
     .mutation(({ ctx, input }) => {
@@ -44,10 +51,19 @@ export const usersRouter = createTRPCRouter({
         },
         data: {
           bio: input.bio,
-          settings_showResources: input.showResources,
           displayName: input.displayName,
           bannerColor: input.bannerColor ?? "#1e293b",
           banner: input.banner,
+          preferences: {
+            upsert: {
+              update: {
+                showResources: input.preferences.showResources,
+              },
+              create: {
+                showResources: input.preferences.showResources,
+              },
+            },
+          },
         },
       });
     }),

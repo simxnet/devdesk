@@ -7,6 +7,7 @@ import {
   ClipboardDocumentIcon,
   EllipsisVerticalIcon,
   ExclamationCircleIcon,
+  TrashIcon,
 } from "@heroicons/react/24/solid";
 import {
   DropdownMenu,
@@ -20,17 +21,24 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import { TwitterIcon } from "lucide-react";
+import Policy from "./Policy";
 
 export interface CardProps {
+  id: string;
   name: string;
   image: string;
   description: string;
+  canDelete: boolean;
+  deleteFn: (id: string) => void;
 }
 
 export default function Card({
+  id,
   name,
   image,
   description,
+  canDelete,
+  deleteFn,
 }: CardProps): JSX.Element {
   return (
     <div className="mx-auto h-full w-full max-w-sm overflow-hidden rounded-xl bg-slate-200 dark:bg-slate-800/80">
@@ -68,6 +76,15 @@ export default function Card({
                       </DropdownMenuSubContent>
                     </DropdownMenuPortal>
                   </DropdownMenuSub>
+                  <DropdownMenuSeparator />
+                  <Policy policy={canDelete}>
+                    <DropdownMenuItem
+                      onClick={() => deleteFn(id)}
+                      className="flex justify-between hover:!bg-red-500/20 hover:!text-red-500"
+                    >
+                      Delete <TrashIcon className="h-4 w-4" />
+                    </DropdownMenuItem>
+                  </Policy>
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>

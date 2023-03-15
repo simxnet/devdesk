@@ -6,16 +6,50 @@ import TypographyP from "@/components/ui/typography/p";
 import TypographyH1 from "@/components/ui/typography/h1";
 import Link from "next/link";
 import { siteConfig } from "@/config/site";
+import { useSession } from "next-auth/react";
+import { useEffect } from "react";
+import { useRouter } from "next/router";
+import { useToast } from "@/lib/useToast";
 
 export default function Home() {
-  const publicResources = api.resources.getAll.useQuery();
+  const { data: session } = useSession();
+  const router = useRouter();
+  const { toast } = useToast();
+  const publicResources = api.resources.all.useQuery();
+  const { data: user } = api.users.single.useQuery({
+    id: session?.user.id!,
+  });
+  const deleteMutation = api.resources.delete.useMutation();
+
+  const handleDelete = (id: string) => {
+    deleteMutation.mutate({
+      id,
+    });
+  };
+
+  useEffect(() => {
+    if (deleteMutation.status === "success") {
+      toast({
+        title: "You have deleted 1 resource",
+      });
+      router.reload();
+    }
+    if (deleteMutation.status === "error") {
+      router.reload();
+    }
+  }, [deleteMutation.status]);
 
   const resources = publicResources.data?.map((resource, index) => (
     <Card
       key={index}
+      id={resource.id}
       name={resource.title}
       description={resource.description}
       image={resource.image}
+      canDelete={
+        user?.permissions === 1 || session?.user.id === resource.userId
+      }
+      deleteFn={handleDelete}
     />
   ));
 
@@ -39,7 +73,7 @@ export default function Home() {
           </Link>
         </div>
       </section>
-      <div className="my-8 grid grid-cols-3" id="resources">
+      <div className="my-8 grid grid-cols-4 gap-3" id="resources">
         {resources}
       </div>
     </Layout>

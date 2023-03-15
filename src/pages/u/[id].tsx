@@ -32,11 +32,12 @@ import { useEffect } from "react";
 
 export default function User() {
   const router = useRouter();
-  const user = api.users.getOne.useQuery({ id: String(router.query.id) });
+  const user = api.users.single.useQuery({ id: String(router.query.id) });
+  const resources = api.resources.user.useQuery();
   const { data } = useSession();
 
-  const user_resources = user.data?.resources.length ? (
-    user.data.resources.map((r, index) => (
+  const user_resources = resources.data?.length ? (
+    resources.data?.map((r, index) => (
       <ReducedCard key={index} name={r.title} url={r.uri} image={r.image} />
     ))
   ) : (
@@ -121,7 +122,7 @@ export default function User() {
                 </div>
               </div>
             </div>
-            {user.data && user.data.settings_showResources && (
+            {user.data && user.data.preferences?.showResources && (
               <div className="mt-4">
                 <Accordion
                   type="single"

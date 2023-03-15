@@ -20,7 +20,7 @@ import { useRouter } from "next/router";
 export default function ResourceSubmit() {
   const { toast } = useToast();
   const router = useRouter();
-  const submit = api.resources.postOne.useMutation();
+  const submit = api.resources.add.useMutation();
 
   // states
   const [name, setName] = useState<string | null>();
@@ -41,14 +41,13 @@ export default function ResourceSubmit() {
         title: name,
         description: description,
         uri: uri,
-        image: image,
+        image: image ?? "",
       });
-      router.reload();
     }
   };
 
   const uploader = Uploader({
-    apiKey: uploader_key, // trial api key
+    apiKey: "public_FW25b844V3RNb8Ugr6HnxiZtnpC6", // trial api key
   });
 
   useEffect(() => {
@@ -56,6 +55,7 @@ export default function ResourceSubmit() {
       toast({
         title: "Resource submitted successfully",
       });
+      router.push("/");
     }
     if (submit.status === "error") {
       toast({
@@ -117,29 +117,26 @@ export default function ResourceSubmit() {
                   onChange={(e) => setURI(e.target.value)}
                 />
               </div>
-              {uploader_key && (
-                <div>
-                  <Label htmlFor="rimage">Image</Label>
-                  <div className="flex h-10 w-full rounded-md border border-slate-300 bg-transparent py-2 px-3 text-sm duration-100 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-700 dark:text-slate-50 dark:focus:ring-slate-400 dark:focus:ring-offset-slate-900">
-                    <UploadButton
-                      uploader={uploader}
-                      onComplete={(files) => {
-                        setImage(files[0]?.fileUrl);
-                        setImageText("Done, 1 image uploaded");
-                      }}
-                    >
-                      {({ onClick }) => (
-                        <button onClick={onClick}>{imageText}</button>
-                      )}
-                    </UploadButton>
-                  </div>
-                  <TypographyP className="mt-1 !text-xs md:!text-sm">
-                    The image should be a screenshot of the main page of the
-                    web/resource
-                  </TypographyP>
+              <div>
+                <Label htmlFor="rimage">Image</Label>
+                <div className="flex h-10 w-full rounded-md border border-slate-300 bg-transparent py-2 px-3 text-sm duration-100 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-700 dark:text-slate-50 dark:focus:ring-slate-400 dark:focus:ring-offset-slate-900">
+                  <UploadButton
+                    uploader={uploader}
+                    onComplete={(files) => {
+                      setImage(files[0]?.fileUrl);
+                      setImageText("Done, 1 image uploaded");
+                    }}
+                  >
+                    {({ onClick }) => (
+                      <button onClick={onClick}>{imageText}</button>
+                    )}
+                  </UploadButton>
                 </div>
-              )}
-
+                <TypographyP className="mt-1 !text-xs md:!text-sm">
+                  The image should be a screenshot of the main page of the
+                  web/resource
+                </TypographyP>
+              </div>
               <div className="mt-5 flex flex-wrap justify-end gap-3">
                 <Button
                   isLoading={submit.isLoading}
