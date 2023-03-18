@@ -20,11 +20,7 @@ import TypographyH4 from "@/components/ui/typography/h4";
 import TypographyP from "@/components/ui/typography/p";
 import { cn } from "@/lib/utils";
 import { api } from "@/utils/api";
-import {
-  EllipsisVerticalIcon,
-  PaperClipIcon,
-  PencilIcon,
-} from "@heroicons/react/24/solid";
+import { IconDots, IconFlag, IconPencil } from "@tabler/icons-react";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
@@ -77,7 +73,7 @@ export default function User() {
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant={"ghost"} className="rounded-full p-2">
-                    <EllipsisVerticalIcon className="h-6 w-6" />
+                    <IconDots className="h-6 w-6" />
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="mr-10 dark:bg-slate-900">
@@ -85,12 +81,12 @@ export default function User() {
                     className="flex justify-between"
                     disabled={user.data?.id === data?.user.id}
                   >
-                    Report <PaperClipIcon className="h-4 w-4" />
+                    Report <IconFlag className="h-4 w-4" />
                   </DropdownMenuItem>
                   <Policy policy={data?.user.id === user.data?.id}>
                     <Link href="/u/edit">
                       <DropdownMenuItem className="flex justify-between">
-                        Edit <PencilIcon className="h-4 w-4" />
+                        Edit <IconPencil className="h-4 w-4" />
                       </DropdownMenuItem>
                     </Link>
                   </Policy>
