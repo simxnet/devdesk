@@ -14,7 +14,7 @@ import TypographyP from "@/components/ui/typography/p";
 import { useToast } from "@/lib/useToast";
 import { getServerAuthSession } from "@/server/auth";
 import { api } from "@/utils/api";
-import { ArrowsRightLeftIcon } from "@heroicons/react/24/outline";
+import { IconAffiliate } from "@tabler/icons-react";
 import { GetServerSideProps } from "next";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
@@ -133,7 +133,7 @@ export default function UserEdit() {
           <div className="p-6">
             <div className="mb-4 flex flex-col items-center rounded-md bg-slate-300 p-4 text-sm text-slate-600 dark:bg-slate-900 dark:text-slate-300 md:flex-row">
               <div className="mr-4 flex">
-                <ArrowsRightLeftIcon className="h-6 w-6" />
+                <IconAffiliate className="h-6 w-6" />
               </div>
               <div className="flex items-center">
                 Please remember that you logged in using a external provider, we

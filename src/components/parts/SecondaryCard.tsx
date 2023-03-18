@@ -1,12 +1,12 @@
 import { cn } from "@/lib/utils";
 import {
-  ClipboardDocumentIcon,
-  EllipsisHorizontalIcon,
-  ExclamationCircleIcon,
-  TrashIcon,
-} from "@heroicons/react/24/solid";
-import { TwitterIcon } from "lucide-react";
-import { useEffect, useState } from "react";
+  IconBrandTwitterFilled,
+  IconCopy,
+  IconDots,
+  IconFlag,
+  IconTrash,
+} from "@tabler/icons-react";
+import { useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Button } from "../ui/button";
 import {
@@ -91,22 +91,22 @@ export default function SecondaryCard({
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button className="!p-2">
-                    <EllipsisHorizontalIcon className="h-6 w-6" />
+                    <IconDots className="h-6 w-6" />
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
                   <DropdownMenuItem className="flex justify-between">
-                    Copy link <ClipboardDocumentIcon className="h-4 w-4" />
+                    Copy link <IconCopy className="h-4 w-4" />
                   </DropdownMenuItem>
                   <DropdownMenuItem className="flex justify-between">
-                    Report <ExclamationCircleIcon className="h-4 w-4" />
+                    Report <IconFlag className="h-4 w-4" />
                   </DropdownMenuItem>
                   <DropdownMenuSub>
                     <DropdownMenuSubTrigger>Share</DropdownMenuSubTrigger>
                     <DropdownMenuPortal>
                       <DropdownMenuSubContent>
                         <DropdownMenuItem className="flex justify-between">
-                          Twitter <TwitterIcon className="h-4 w-4" />
+                          Twitter <IconBrandTwitterFilled className="h-4 w-4" />
                         </DropdownMenuItem>
                       </DropdownMenuSubContent>
                     </DropdownMenuPortal>
@@ -117,7 +117,7 @@ export default function SecondaryCard({
                       onClick={() => deleteFn(id)}
                       className="flex justify-between hover:!bg-red-500/20 hover:!text-red-500"
                     >
-                      Delete <TrashIcon className="h-4 w-4" />
+                      Delete <IconTrash className="h-4 w-4" />
                     </DropdownMenuItem>
                   </Policy>
                 </DropdownMenuContent>

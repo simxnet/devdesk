@@ -9,12 +9,12 @@ import { useToast } from "@/lib/useToast";
 import { beautifyErrors } from "@/lib/utils";
 import { getServerAuthSession } from "@/server/auth";
 import { api } from "@/utils/api";
-import { ExclamationTriangleIcon } from "@heroicons/react/24/solid";
 import { GetServerSideProps } from "next";
 import { ChangeEvent, useEffect, useState } from "react";
 import { Uploader } from "uploader";
 import { UploadButton } from "react-uploader";
 import { useRouter } from "next/router";
+import { IconAlertTriangle } from "@tabler/icons-react";
 
 interface SubmitData {
   title: string;
@@ -126,7 +126,7 @@ export default function ResourceSubmit() {
           <div className="p-6">
             <div className="mb-4 flex flex-col items-center rounded-md bg-slate-300 p-4 text-sm text-slate-600 dark:bg-slate-900 dark:text-slate-300 md:flex-row">
               <div className="mr-4 flex">
-                <ExclamationTriangleIcon className="h-6 w-6" />
+                <IconAlertTriangle className="h-6 w-6" />
               </div>
               <div className="flex items-center">
                 Submitted resources are not reviewed by anyone, please do not

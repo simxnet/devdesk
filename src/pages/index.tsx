@@ -6,7 +6,7 @@ import TypographyH1 from "@/components/ui/typography/h1";
 import Link from "next/link";
 import { siteConfig } from "@/config/site";
 import { useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useRouter } from "next/router";
 import { useToast } from "@/lib/useToast";
 import SecondaryCard from "@/components/parts/SecondaryCard";
@@ -17,7 +17,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { LinkIcon } from "@heroicons/react/24/solid";
+import { IconLink } from "@tabler/icons-react";
 
 export default function Home() {
   const { data: session } = useSession();
@@ -107,14 +107,14 @@ export default function Home() {
                 href="https://discord.gg/M65jE8GnBN"
                 className="flex items-center hover:underline"
               >
-                <LinkIcon className="mr-2 h-4 w-4" />
+                <IconLink className="mr-2 h-4 w-4" />
                 Discord
               </Link>
               <Link
                 href="https://github.com/chikaof/devdesk"
                 className="flex items-center hover:underline"
               >
-                <LinkIcon className="mr-2 h-4 w-4" />
+                <IconLink className="mr-2 h-4 w-4" />
                 GitHub
               </Link>
             </div>

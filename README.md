@@ -13,8 +13,10 @@ A community-driven resource gallery for developers made on top of React
 ## Acknowledgements
 
 UI components are made by [shadcn](https://ui.shadcn.com/)
+
 This website was initialized with [Create T3](https://create.t3.gg/)
-Icons are from @heroicons/react
+
+I use @tabler/icons-react for this project
 
 ## Environment Variables
 
