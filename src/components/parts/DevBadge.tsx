@@ -1,6 +1,4 @@
-import { SparklesIcon } from "@heroicons/react/24/solid";
-import { Plus } from "lucide-react";
-import { Button } from "../ui/button";
+import { IconLeaf } from "@tabler/icons-react";
 import {
   Tooltip,
   TooltipContent,
@@ -14,7 +12,7 @@ export default function DevBadge({ color }: { color: string }) {
       <Tooltip>
         <TooltipTrigger asChild>
           <div className="ml-2 rounded-md bg-slate-900 p-[6px]">
-            <SparklesIcon
+            <IconLeaf
               className="h-4 w-4"
               style={{
                 color,

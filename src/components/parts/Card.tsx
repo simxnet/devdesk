@@ -3,13 +3,6 @@ import TypographyH3 from "../ui/typography/h3";
 import TypographyP from "../ui/typography/p";
 import { cutText } from "@/lib/utils";
 import {
-  ChevronRightIcon,
-  ClipboardDocumentIcon,
-  EllipsisVerticalIcon,
-  ExclamationCircleIcon,
-  TrashIcon,
-} from "@heroicons/react/24/solid";
-import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -20,8 +13,14 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
-import { TwitterIcon } from "lucide-react";
 import Policy from "./Policy";
+import {
+  IconBrandTwitterFilled,
+  IconCopy,
+  IconDots,
+  IconFlag,
+  IconTrash,
+} from "@tabler/icons-react";
 
 export interface CardProps {
   id: string;
@@ -56,33 +55,33 @@ export default function Card({
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" size={"sm"} className="rounded-full">
-                    <EllipsisVerticalIcon className="h-5 w-5" />
+                    <IconDots className="h-5 w-5" />
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
                   <DropdownMenuItem className="flex justify-between">
-                    Copy link <ClipboardDocumentIcon className="h-4 w-4" />
+                    Copy link <IconCopy className="h-4 w-4" />
                   </DropdownMenuItem>
                   <DropdownMenuItem className="flex justify-between">
-                    Report <ExclamationCircleIcon className="h-4 w-4" />
+                    Report <IconFlag className="h-4 w-4" />
                   </DropdownMenuItem>
                   <DropdownMenuSub>
                     <DropdownMenuSubTrigger>Share</DropdownMenuSubTrigger>
                     <DropdownMenuPortal>
                       <DropdownMenuSubContent>
                         <DropdownMenuItem className="flex justify-between">
-                          Twitter <TwitterIcon className="h-4 w-4" />
+                          Twitter <IconBrandTwitterFilled className="h-4 w-4" />
                         </DropdownMenuItem>
                       </DropdownMenuSubContent>
                     </DropdownMenuPortal>
                   </DropdownMenuSub>
                   <Policy policy={canDelete}>
-                  <DropdownMenuSeparator />
+                    <DropdownMenuSeparator />
                     <DropdownMenuItem
                       onClick={() => deleteFn(id)}
                       className="flex justify-between hover:!bg-red-500/20 hover:!text-red-500"
                     >
-                      Delete <TrashIcon className="h-4 w-4" />
+                      Delete <IconTrash className="h-4 w-4" />
                     </DropdownMenuItem>
                   </Policy>
                 </DropdownMenuContent>
