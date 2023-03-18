@@ -75,7 +75,7 @@ export default function SecondaryCard({
       <div className="flex w-full flex-grow">
         <div className="flex flex-1 flex-row items-start gap-3">
           <div className="flex">
-            <Avatar className="h-24 w-36 !rounded-lg">
+            <Avatar className="h-24 w-44 !rounded-lg">
               <AvatarImage alt={name} src={image} />
               <AvatarFallback>{name}</AvatarFallback>
             </Avatar>

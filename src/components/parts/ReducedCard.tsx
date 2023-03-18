@@ -1,4 +1,4 @@
-import TypographyH3 from "../ui/typography/h3";
+import TypographyH4 from "../ui/typography/h4";
 
 export interface ReducedCardProps {
   name: string;
@@ -20,7 +20,7 @@ export default function ReducedCard({
         }}
       ></div>
       <div className="p-2">
-        <TypographyH3>{name}</TypographyH3>
+        <TypographyH4 className="truncate">{name}</TypographyH4>
       </div>
     </div>
   );

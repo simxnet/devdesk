@@ -30,22 +30,33 @@ import { useEffect } from "react";
 export default function User() {
   const router = useRouter();
   const user = api.users.single.useQuery({ id: String(router.query.id) });
-  const resources = api.resources.user.useQuery();
   const { data } = useSession();
 
-  const user_resources = resources.data?.length ? (
-    resources.data?.map((r, index) => (
-      <ReducedCard key={index} name={r.title} url={r.uri} image={r.image} />
-    ))
-  ) : (
+  const userResources = user.data?.resources?.map((resource, index) => (
+    <ReducedCard
+      key={index}
+      name={resource.title}
+      url={resource.uri}
+      image={resource.image}
+    />
+  ));
+
+  const noResourcesAvailable = (
     <TypographyP>{user.data?.name} has no resources available</TypographyP>
   );
 
+  const userResourcesOrMessage = userResources?.length
+    ? userResources
+    : noResourcesAvailable;
+
+  const isDeveloper = user.data && user.data.permissions === 1;
+  const hasDisplayName = user.data && user.data.displayName;
+
   useEffect(() => {
     if (user.isError || user.error) {
-      router.push("/").then(() => console.info("redirected /"));
+      router.push("/");
     }
-  }, [user, router]);
+  }, [user.isError, user.error, router]);
   return (
     <Layout title={user.data?.displayName! || user.data?.name!}>
       <div className="mx-auto max-w-3xl">
@@ -59,17 +70,17 @@ export default function User() {
           />
           <div className="p-6">
             <div className="relative flex justify-between">
-              {user.isLoading ? (
-                <div className="-mt-20 h-24 w-24 rounded-full bg-slate-200 ring-8 ring-slate-200 dark:bg-slate-800 dark:ring-slate-800" />
-              ) : (
-                <Image
-                  alt="user avatar"
-                  width={96}
-                  height={96}
-                  src={(user.data && user.data.image) ?? ""}
-                  className="-mt-20 h-24 w-24 rounded-full bg-slate-200 ring-8 ring-slate-200 dark:bg-slate-800 dark:ring-slate-800"
-                />
-              )}
+              <div className="-mt-20 h-24 w-24 rounded-full bg-slate-200 ring-8 ring-slate-200 dark:bg-slate-800 dark:ring-slate-800">
+                {user.isLoading ? null : (
+                  <Image
+                    alt="user avatar"
+                    width={96}
+                    height={96}
+                    src={user.data?.image ?? ""}
+                    className="rounded-full"
+                  />
+                )}
+              </div>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant={"ghost"} className="rounded-full p-2">
@@ -96,36 +107,26 @@ export default function User() {
             <div className="mt-0">
               <div className="flex flex-col">
                 <div>
-                  {user.data && user.data.displayName ? (
-                    <div className="mb-2 flex flex-col gap-1">
-                      <TypographyH3 className="flex items-center">
-                        {user.data && user.data.displayName}{" "}
-                        {user.data && user.data.permissions === 1 && (
-                          <DevBadge
-                            color={user.data?.bannerColor ?? "rgb(30 41 59)"}
-                          />
-                        )}
-                      </TypographyH3>
-                      <TypographyH4 className="opacity-80">
-                        {user.data && user.data.name}
-                      </TypographyH4>
-                    </div>
-                  ) : (
+                  <div className="mb-2 flex flex-col gap-1">
                     <TypographyH3 className="flex items-center">
-                      {user.data && user.data.name}{" "}
-                      {user.data && user.data.permissions === 1 && (
+                      {hasDisplayName
+                        ? user.data?.displayName
+                        : user.data?.name}{" "}
+                      {isDeveloper && (
                         <DevBadge
                           color={user.data?.bannerColor ?? "rgb(30 41 59)"}
                         />
                       )}
                     </TypographyH3>
+                  </div>
+                  {user.data?.bio && (
+                    <TypographyP className="mb-2 mt-1 border-l-2 border-l-slate-500 pl-2 text-slate-700 dark:!text-slate-300">
+                      {user.data.bio}
+                    </TypographyP>
                   )}
-                  <TypographyP className="mb-2 mt-1 border-l-2 border-l-slate-500 pl-2 text-slate-700 dark:!text-slate-300">
-                    {user.data && user.data.bio}
-                  </TypographyP>
                   <TypographyP>
-                    {(user.data && user.data.name) ?? "User"} has submitted{" "}
-                    {(user.data && user.data.resources.length) ?? 0} resources
+                    {user.data?.name || "User"} has submitted{" "}
+                    {user.data?.resources?.length || 0} resources
                   </TypographyP>
                 </div>
               </div>
@@ -145,7 +146,7 @@ export default function User() {
                           user.data.resources.length && "grid grid-cols-4 gap-2"
                         )}
                       >
-                        {user_resources}
+                        {userResourcesOrMessage}
                       </div>
                     </AccordionContent>
                   </AccordionItem>

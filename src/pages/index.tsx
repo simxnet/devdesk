@@ -25,28 +25,31 @@ export default function Home() {
   const { toast } = useToast();
 
   const publicResources = api.resources.all.useQuery();
-  const deleteMutation = api.resources.delete.useMutation();
+  const { mutate, status, error } = api.resources.delete.useMutation();
   const user = api.users.single.useQuery({
     id: session?.user.id!,
   });
 
   const handleDelete = (id: string) => {
-    deleteMutation.mutate({
+    mutate({
       id,
     });
   };
 
   useEffect(() => {
-    if (deleteMutation.status === "success") {
+    if (status === "success") {
       toast({
         title: "You have deleted 1 resource",
       });
       router.reload();
-    }
-    if (deleteMutation.status === "error") {
+    } else if (status === "error") {
+      toast({
+        title: "Something happened",
+        description: error.message,
+      });
       router.reload();
     }
-  }, [deleteMutation.status]);
+  }, [status, error]);
 
   const resources = publicResources.data?.map((resource, index) => (
     <SecondaryCard
