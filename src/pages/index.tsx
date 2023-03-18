@@ -1,25 +1,34 @@
 import { Layout } from "@/components/Layout/Layout";
 import { Button } from "@/components/ui/button";
 import { api } from "@/utils/api";
-import Card from "@/components/parts/Card";
 import TypographyP from "@/components/ui/typography/p";
 import TypographyH1 from "@/components/ui/typography/h1";
 import Link from "next/link";
 import { siteConfig } from "@/config/site";
 import { useSession } from "next-auth/react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { useToast } from "@/lib/useToast";
+import SecondaryCard from "@/components/parts/SecondaryCard";
+import TypographyH3 from "@/components/ui/typography/h3";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { LinkIcon } from "@heroicons/react/24/solid";
 
 export default function Home() {
   const { data: session } = useSession();
   const router = useRouter();
   const { toast } = useToast();
+
   const publicResources = api.resources.all.useQuery();
-  const { data: user } = api.users.single.useQuery({
+  const deleteMutation = api.resources.delete.useMutation();
+  const user = api.users.single.useQuery({
     id: session?.user.id!,
   });
-  const deleteMutation = api.resources.delete.useMutation();
 
   const handleDelete = (id: string) => {
     deleteMutation.mutate({
@@ -40,14 +49,17 @@ export default function Home() {
   }, [deleteMutation.status]);
 
   const resources = publicResources.data?.map((resource, index) => (
-    <Card
+    <SecondaryCard
       key={index}
       id={resource.id}
       name={resource.title}
       description={resource.description}
       image={resource.image}
+      tags={resource.tags}
+      isFirst={index === 0}
+      isLast={publicResources.data?.length - 1 === index}
       canDelete={
-        user?.permissions === 1 || session?.user.id === resource.userId
+        user.data?.permissions === 1 || session?.user.id === resource.userId
       }
       deleteFn={handleDelete}
     />
@@ -55,26 +67,59 @@ export default function Home() {
 
   return (
     <Layout>
-      <section className="container grid items-center justify-center gap-6 pt-6 pb-8 md:pt-10 md:pb-12 lg:pt-16 lg:pb-24">
-        <div className="mx-auto flex flex-col items-start gap-4 lg:w-[52rem]">
-          <TypographyH1>{siteConfig.devName}</TypographyH1>
+      <div className="mb-10 flex items-center justify-between p-5">
+        <div className="flex max-w-xl flex-col gap-2">
+          <TypographyH1>{siteConfig.name}</TypographyH1>
           <TypographyP>
             Community-driven resource gallery for developers, public and
             open-source for everyone, submit a resource you want to share with
             the community!
           </TypographyP>
-        </div>
-        <div className="flex gap-2">
-          <Link href="#resources">
+          <div className="flex gap-3">
             <Button>Explore</Button>
-          </Link>
-          <Link href="/resource/submit">
-            <Button variant={"link"}>Submit a resource</Button>
-          </Link>
+            <Button variant={"ghost"}>Submit resource</Button>
+          </div>
         </div>
-      </section>
-      <div className="my-8 grid grid-cols-4 gap-3" id="resources">
-        {resources}
+      </div>
+      <div className="flex justify-between gap-5">
+        <div className="flex w-full flex-col">
+          <div className="mb-5 flex items-center justify-between">
+            <TypographyH3>Latest resources</TypographyH3>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button>Filters</Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <DropdownMenuItem>Latest</DropdownMenuItem>
+                <DropdownMenuItem>Popular</DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+          <div className="grid grid-flow-row grid-rows-4 gap-px" id="resources">
+            {resources}
+          </div>
+        </div>
+        <div className="w-72">
+          <div className="flex flex-col gap-2">
+            <TypographyH3>Socials</TypographyH3>
+            <div className="flex flex-col gap-2">
+              <Link
+                href="https://discord.gg/M65jE8GnBN"
+                className="flex items-center hover:underline"
+              >
+                <LinkIcon className="mr-2 h-4 w-4" />
+                Discord
+              </Link>
+              <Link
+                href="https://github.com/chikaof/devdesk"
+                className="flex items-center hover:underline"
+              >
+                <LinkIcon className="mr-2 h-4 w-4" />
+                GitHub
+              </Link>
+            </div>
+          </div>
+        </div>
       </div>
     </Layout>
   );

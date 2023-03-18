@@ -1,30 +1,20 @@
-# Resource App
+# DevDesk
 
 A community-driven resource gallery for developers made on top of React
 
 ## Features
 
-- Light/dark mode toggle
-- Prisma full integration
-- Next-auth installed
-- tRPC queries and mutations
-- More to come...
+- Mode toggle
+- Responsive UI
+- Refetch data on window focus
+- Error handling by default
+- User settings
 
-## UI
+## Acknowledgements
 
 UI components are made by [shadcn](https://ui.shadcn.com/)
-
-## Base
-
-This website's base is made by [Create T3](https://create.t3.gg/)
-
-## Disclaimer
-
-Some dependencies must be removed, I'm in process of doing so, please be patient
-
-## Icons
-
-I use @heroicons/react for icons
+This website was initialized with [Create T3](https://create.t3.gg/)
+Icons are from @heroicons/react
 
 ## Environment Variables
 
@@ -42,7 +32,9 @@ To run this project, you will need to add the following environment variables to
 
 `GITHUB_CLIENT_SECRET`
 
-## Contributing (WIP)
+Some variables missing? Open a issue.
+
+## Contributing
 
 Contributions are always welcome!
 
@@ -50,24 +42,9 @@ See `contributing.md` for ways to get started.
 
 Please adhere to this project's `code of conduct`.
 
-## Tech Stack
+## Important things to say
 
-- React
-- Next.js
-- TailwindCSS
-- Radix UI
-- tRPC
-- Next-Auth (GitHub and Discord providers)
-
-## FAQ
-
-#### How do I self-host this?
-
-I will not give any support to self-host, you still have permission to do so.
-
-#### UI folder has docs?
-
-As mentioned before, all components are from [shadcn/ui](https://ui.shadcn.com/)
+### 1. I will NOT give any support to self-host your own instance of Dev Desk client, you still can do so.
 
 ## License
 

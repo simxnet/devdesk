@@ -26,7 +26,6 @@ import {
   PencilIcon,
 } from "@heroicons/react/24/solid";
 import { useSession } from "next-auth/react";
-import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -51,32 +50,8 @@ export default function User() {
       router.push("/").then(() => console.info("redirected /"));
     }
   }, [user, router]);
-
-  if (!user.data) return <></>;
   return (
-    <Layout title={user.data.displayName! || user.data.name!}>
-      <Head>
-        <meta
-          property="og:title"
-          content={`${user.data.displayName || user.data.name} on DevDesk`}
-        />
-        <meta property="og:type" content="website" />
-        <meta
-          property="og:url"
-          content={`https://devdesk.vercel.app/u/${user.data.id}`}
-        />
-        <meta property="og:image" content={user.data.image!} />
-        <meta
-          property="og:description"
-          content={
-            user.data?.bio ?? `See ${user.data.name}'s profile on DevDesk!`
-          }
-        />
-        <meta
-          name="theme-color"
-          content={user.data.bannerColor! ?? "#FF0000"}
-        />
-      </Head>
+    <Layout title={user.data?.displayName! || user.data?.name!}>
       <div className="mx-auto max-w-3xl">
         <div className="overflow-hidden rounded-2xl border bg-slate-200 dark:border-slate-700 dark:bg-slate-800">
           <div

@@ -76,8 +76,8 @@ export default function Card({
                       </DropdownMenuSubContent>
                     </DropdownMenuPortal>
                   </DropdownMenuSub>
-                  <DropdownMenuSeparator />
                   <Policy policy={canDelete}>
+                  <DropdownMenuSeparator />
                     <DropdownMenuItem
                       onClick={() => deleteFn(id)}
                       className="flex justify-between hover:!bg-red-500/20 hover:!text-red-500"

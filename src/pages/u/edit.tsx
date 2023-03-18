@@ -21,6 +21,14 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { BlockPicker, ColorResult } from "react-color";
 
+interface IState {
+  newBio: string | null;
+  showResources: boolean;
+  newDisplayName: string | null;
+  newBannerColor: string | null;
+  newBanner: string | null;
+}
+
 export default function UserEdit() {
   const session = useSession();
   const { toast } = useToast();
@@ -38,11 +46,23 @@ export default function UserEdit() {
   );
 
   // settings states
-  const [newBio, setNewBio] = useState<string | null>(null);
-  const [showResources, setShowResources] = useState<boolean>(false);
-  const [newDisplayName, setNewDisplayName] = useState<string | null>(null);
-  const [newBannerColor, setNewbannerColor] = useState<string | null>(null);
-  const [newBanner, setNewbanner] = useState<string | null>(null);
+  const [state, setState] = useState<IState>({
+    newBio: null,
+    showResources: false,
+    newDisplayName: null,
+    newBannerColor: null,
+    newBanner: null,
+  });
+
+  const updateState = (key: keyof IState, value: any) => {
+    setState((prevState) => ({
+      ...prevState,
+      [key]: value,
+    }));
+  };
+
+  const { newBio, showResources, newDisplayName, newBannerColor, newBanner } =
+    state;
 
   // manage data changes
   const settings = api.users.update.useMutation();
@@ -59,43 +79,44 @@ export default function UserEdit() {
     });
   };
 
-  const handleColorChange = ({ hex }: ColorResult) => {
-    setNewbannerColor(hex);
+  const handleColorChange = ({ hex }: ColorResult): void => {
+    updateState("newBannerColor", hex);
   };
 
   useEffect(() => {
-    if (settings.status === "success") {
-      refetch();
-      toast({
-        title: "Saved successfully",
-      });
-    } else if (settings.status === "error") {
-      toast({
-        title: "Something happened",
-        variant: "destructive",
-      });
-    }
+    const handleSettingsStatus = (status: string | undefined) => {
+      if (status === "success") {
+        refetch();
+        toast({
+          title: "Saved successfully",
+        });
+      } else if (status === "error") {
+        toast({
+          title: "Something happened",
+          variant: "destructive",
+        });
+      }
+    };
+
+    handleSettingsStatus(settings.status);
   }, [settings.status]);
 
   useEffect(() => {
-    if (user?.preferences?.showResources) {
-      setShowResources(true);
+    const { preferences, bio, displayName, banner, bannerColor } = user || {};
+    if (preferences?.showResources) {
+      updateState("showResources", true);
     }
-
-    if (user?.bio) {
-      setNewBio(user.bio);
+    if (bio) {
+      updateState("newBio", bio);
     }
-
-    if (user?.displayName) {
-      setNewDisplayName(user.displayName);
+    if (displayName) {
+      updateState("newDisplayName", displayName);
     }
-
-    if (user?.banner) {
-      setNewbanner(user.banner);
+    if (banner) {
+      updateState("newBanner", banner);
     }
-
-    if (user?.bannerColor) {
-      setNewbannerColor(user.bannerColor);
+    if (bannerColor) {
+      updateState("newBannerColor", bannerColor);
     }
   }, [user]);
 
@@ -126,8 +147,10 @@ export default function UserEdit() {
                   id="displayName"
                   className="mt-2"
                   maxLength={15}
-                  onChange={(e) => setNewDisplayName(e.target.value)}
-                  defaultValue={newDisplayName ?? ""}
+                  value={newDisplayName ?? ""}
+                  onChange={(e) =>
+                    updateState("newDisplayName", e.target.value)
+                  }
                   placeholder={"Your new display name"}
                 />
               </div>
@@ -144,7 +167,10 @@ export default function UserEdit() {
                         }}
                       />
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent className="!border-0 !bg-transparent p-3 !shadow-none">
+                    <DropdownMenuContent
+                      avoidCollisions
+                      className="!border-0 !bg-transparent p-3 !shadow-none"
+                    >
                       <BlockPicker
                         color={newBannerColor!}
                         onChangeComplete={handleColorChange}
@@ -177,20 +203,23 @@ export default function UserEdit() {
                   id="bio"
                   className="mt-2"
                   maxLength={120}
-                  onChange={(e) => setNewBio(e.target.value)}
-                  defaultValue={newBio ?? undefined}
+                  value={newBio ?? ""}
+                  onChange={(e) => updateState("newBio", e.target.value)}
                   placeholder={"Describe yourself!"}
                 />
               </div>
             </div>
+
             <div className="mt-4">
               <div className="flex flex-row items-center justify-between">
                 <Label htmlFor="showresources" className="mb-2">
                   Show resources on your profile?
                 </Label>
                 <Switch
-                  onCheckedChange={(e) => setShowResources(e)}
                   checked={showResources}
+                  onCheckedChange={(check) =>
+                    updateState("showResources", check)
+                  }
                   id="showresources"
                 />
               </div>

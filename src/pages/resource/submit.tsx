@@ -6,16 +6,31 @@ import { Textarea } from "@/components/ui/textarea";
 import TypographyH3 from "@/components/ui/typography/h3";
 import TypographyP from "@/components/ui/typography/p";
 import { useToast } from "@/lib/useToast";
-import { beautifyErrors, uploader_key } from "@/lib/utils";
+import { beautifyErrors } from "@/lib/utils";
 import { getServerAuthSession } from "@/server/auth";
 import { api } from "@/utils/api";
 import { ExclamationTriangleIcon } from "@heroicons/react/24/solid";
 import { GetServerSideProps } from "next";
-import { useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { Uploader } from "uploader";
 import { UploadButton } from "react-uploader";
 import { useRouter } from "next/router";
+
+interface SubmitData {
+  title: string;
+  description: string;
+  uri: string;
+  image: string;
+  tags: string[];
+}
+
+interface FormValues {
+  name: string;
+  description: string;
+  uri: string;
+  image: string;
+  tags: string;
+}
 
 export default function ResourceSubmit() {
   const { toast } = useToast();
@@ -23,26 +38,57 @@ export default function ResourceSubmit() {
   const submit = api.resources.add.useMutation();
 
   // states
-  const [name, setName] = useState<string | null>();
-  const [description, setDescription] = useState<string | null>();
-  const [uri, setURI] = useState<string | null>();
-  const [image, setImage] = useState<string | null>();
-  const [imageText, setImageText] = useState("Upload a image");
+  const [formValues, setFormValues] = useState<FormValues>({
+    name: "",
+    description: "",
+    uri: "",
+    image: "",
+    tags: "",
+  });
+
+  const handleInputChange = (
+    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = event.target;
+    setFormValues((prevFormValues) => ({
+      ...prevFormValues,
+      [name]: value,
+    }));
+  };
 
   const handleSubmit = () => {
-    if (!name || !description || !uri || !image) {
+    const requiredFields: (string | undefined)[] = [
+      formValues.name,
+      formValues.description,
+      formValues.uri,
+      formValues.image,
+      formValues.tags,
+    ];
+    const isMissingFields = requiredFields.some((field) => !field);
+
+    if (isMissingFields) {
       toast({
         title: "Something happened",
         description: "Some fields are missing",
         variant: "destructive",
       });
     } else {
-      submit.mutate({
-        title: name,
-        description: description,
-        uri: uri,
-        image: image ?? "",
-      });
+      const tagsArray = formValues.tags.trim().split(/\,/);
+      if (tagsArray.length > 5) {
+        return toast({
+          title: "Something happened",
+          description: "Add up to 5 tags!",
+          variant: "destructive",
+        });
+      }
+      const submitData: SubmitData = {
+        title: formValues.name,
+        description: formValues.description,
+        uri: formValues.uri,
+        image: formValues.image,
+        tags: tagsArray,
+      };
+      submit.mutate(submitData);
     }
   };
 
@@ -89,46 +135,67 @@ export default function ResourceSubmit() {
             </div>
             <div className="flex flex-col space-y-5">
               <div>
-                <Label htmlFor="rname">Name</Label>
+                <Label htmlFor="name">Name</Label>
                 <Input
-                  id="rname"
+                  id="name"
                   className="mt-2"
                   maxLength={30}
                   placeholder={"Resource name"}
-                  onChange={(e) => setName(e.target.value)}
+                  onChange={handleInputChange}
+                  name="name"
+                  value={formValues.name || ""}
                 />
               </div>
               <div>
-                <Label htmlFor="rdesc">Description</Label>
+                <Label htmlFor="description">Description</Label>
                 <Textarea
-                  id="rdesc"
+                  id="description"
                   className="mt-2"
                   maxLength={250}
                   placeholder={"Resource description"}
-                  onChange={(e) => setDescription(e.target.value)}
+                  onChange={handleInputChange}
+                  name="description"
+                  value={formValues.description || ""}
                 />
               </div>
               <div>
-                <Label htmlFor="rurl">URL</Label>
+                <Label htmlFor="tags">Tags</Label>
                 <Input
-                  id="rurl"
+                  id="tags"
+                  className="mt-2"
+                  placeholder={"Resource tags (SEPARATED WITH COMMAS!)"}
+                  onChange={handleInputChange}
+                  name="tags"
+                  value={formValues.tags || ""}
+                />
+              </div>
+              <div>
+                <Label htmlFor="uri">URL</Label>
+                <Input
+                  id="uri"
                   className="mt-2"
                   placeholder={"Resource url"}
-                  onChange={(e) => setURI(e.target.value)}
+                  onChange={handleInputChange}
+                  name="uri"
+                  value={formValues.uri || ""}
                 />
               </div>
               <div>
-                <Label htmlFor="rimage">Image</Label>
+                <Label htmlFor="image">Image</Label>
                 <div className="flex h-10 w-full rounded-md border border-slate-300 bg-transparent py-2 px-3 text-sm duration-100 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-700 dark:text-slate-50 dark:focus:ring-slate-400 dark:focus:ring-offset-slate-900">
                   <UploadButton
                     uploader={uploader}
                     onComplete={(files) => {
-                      setImage(files[0]?.fileUrl);
-                      setImageText("Done, 1 image uploaded");
+                      setFormValues({
+                        ...formValues,
+                        image: files[0]?.fileUrl!,
+                      });
                     }}
                   >
                     {({ onClick }) => (
-                      <button onClick={onClick}>{imageText}</button>
+                      <button onClick={onClick}>
+                        {formValues.image ? "Done" : "Select one image"}
+                      </button>
                     )}
                   </UploadButton>
                 </div>
